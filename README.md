@@ -9,7 +9,7 @@ Used by [servicestack.net](http://servicestack.net/) to process merhcant payment
   - **Small**, typed, message-based API uses only clean DTO's and fits in a single [StripeGateway.cs](https://github.com/ServiceStack/Stripe/blob/master/src/Stripe/StripeGateway.cs) class
   - **Portable** profile supporting .NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store clients
   - **Open-ended**, can use custom declarative DTO's defined in your own app to access new APIs  
-  - See [Stripe.Tests](https://github.com/ServiceStack/Stripe/tree/master/tests/Stripe.Tests) for example usage.
+  - See [Stripe.Tests](https://github.com/ServiceStack/Stripe/tree/master/tests/Stripe.Tests) for more example usages.
 
 ## Install ServiceStack.Stripe
 

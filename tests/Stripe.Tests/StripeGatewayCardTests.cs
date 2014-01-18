@@ -84,6 +84,31 @@ namespace Stripe.Tests
         }
 
         [Test]
+        public void Can_Update_Card()
+        {
+            var customer = CreateCustomer();
+
+            var card = gateway.Post(new UpdateStripeCard
+            {
+                CustomerId = customer.Id,
+                CardId = customer.Cards.Data[0].Id,
+
+                Name = "Test Card Updated",
+
+                AddressLine1 = "1 Address Road Updated",
+                AddressLine2 = "45321",
+                AddressZip = "City",
+                AddressState = "NY",
+                AddressCountry = "US",
+
+                ExpMonth = 2,
+                ExpYear = 2020,
+            });
+
+            Assert.That(card.Name, Is.EqualTo("Test Card Updated"));
+        }
+
+        [Test]
         public void Can_Delete_Customer_Card()
         {
             var customer = CreateCustomer();

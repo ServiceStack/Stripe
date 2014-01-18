@@ -54,6 +54,14 @@ namespace Stripe.Tests
         }
 
         [Test]
+        public void Can_Get_All_Invoices()
+        {
+            var invoices = gateway.Get(new GetStripeInvoices { Count = 20 });
+
+            invoices.PrintDump();
+        }
+
+        [Test]
         public void Can_Get_Upcoming_Invoice()
         {
             var customer = CreateCustomer();

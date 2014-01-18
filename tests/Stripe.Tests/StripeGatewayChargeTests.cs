@@ -57,6 +57,30 @@ namespace Stripe.Tests
         }
 
         [Test]
+        public void Can_Update_Charge()
+        {
+            var customer = CreateCustomer();
+
+            var charge = gateway.Post(new ChargeStripeCustomer
+            {
+                Amount = 100,
+                Customer = customer.Id,
+                Currency = "usd",
+                Description = "Test Charge Customer",
+            });
+
+            charge = gateway.Post(new UpdateStripeCharge
+            {
+                ChargeId = charge.Id,
+                Description = "Updated Charge Description"
+            });
+
+            charge.PrintDump();
+
+            Assert.That(charge.Description, Is.EqualTo("Updated Charge Description"));
+        }
+
+        [Test]
         public void Can_RefundCharge()
         {
             var customer = CreateCustomer();
@@ -111,9 +135,9 @@ namespace Stripe.Tests
             Assert.That(charge.Captured, Is.False);
 
             var captureCharge = gateway.Post(new CaptureStripeCharge
-                {
-                    ChargeId = charge.Id,
-                });
+            {
+                ChargeId = charge.Id,
+            });
 
             captureCharge.PrintDump();
 

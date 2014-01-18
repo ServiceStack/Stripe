@@ -31,6 +31,15 @@ namespace ServiceStack.Stripe
         public string ChargeId { get; set; }
     }
 
+    [Route("/charges/{ChargeId}")]
+    public class UpdateStripeCharge : IPost, IReturn<StripeCharge>
+    {
+        [IgnoreDataMember]
+        public string ChargeId { get; set; }
+        public string Description { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+    }
+
     [Route("/charges/{ChargeId}/refund")]
     public class RefundStripeCharge : IPost, IReturn<StripeCharge>
     {
@@ -124,6 +133,25 @@ namespace ServiceStack.Stripe
     {
         public string CustomerId { get; set; }
         public string CardId { get; set; }
+    }
+
+    [Route("/customers/{CustomerId}/cards/{CardId}")]
+    public class UpdateStripeCard : IPost, IReturn<StripeCard>
+    {
+        [IgnoreDataMember]
+        public string CustomerId { get; set; }
+        [IgnoreDataMember]
+        public string CardId { get; set; }
+
+        public string AddressCity { get; set; }
+        public string AddressCountry { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string AddressState { get; set; }
+        public string AddressZip { get; set; }
+        public int? ExpMonth { get; set; }
+        public int? ExpYear { get; set; }
+        public string Name { get; set; }
     }
 
     [Route("/customers/{CustomerId}/cards/{CardId}")]
@@ -256,6 +284,13 @@ namespace ServiceStack.Stripe
     /* Invoices
      * https://stripe.com/docs/api/curl#invoices
      */
+
+    [Route("/invoices/{Id}")]
+    public class GetStripeInvoice : IGet, IReturn<StripeInvoice>
+    {
+        public string Id { get; set; }
+    }
+
     [Route("/invoices")]
     public class CreateStripeInvoice : IPost, IReturn<StripeInvoice>
     {
@@ -268,6 +303,15 @@ namespace ServiceStack.Stripe
     {
         [IgnoreDataMember]
         public string Id { get; set; }
+    }
+
+    [Route("/invoices")]
+    public class GetStripeInvoices : IGet, IReturn<StripeCollection<StripeInvoice>>
+    {
+        public string Customer { get; set; }
+        public DateTime? Date { get; set; }
+        public int? Count { get; set; }
+        public int? Offset { get; set; }
     }
 
     [Route("/invoices/upcoming")]
@@ -589,11 +633,6 @@ namespace ServiceStack.Stripe.Types
         public string DefaultCard { get; set; }
     }
 
-    public class DeleteStripeCustomer
-    {
-        public string Id { get; set; }
-    }
-
     public class GetAllStripeCustomers
     {
         public int? Count { get; set; }
@@ -619,12 +658,12 @@ namespace ServiceStack.Stripe.Types
         public string Cvc { get; set; }
         public string Name { get; set; }
 
+        public string AddressCity { get; set; }
+        public string AddressCountry { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public string AddressCity { get; set; }
         public string AddressState { get; set; }
         public string AddressZip { get; set; }
-        public string AddressCountry { get; set; }
         public StripeCvcCheck? CvcCheck { get; set; }
         public string AddressLine1Check { get; set; }
         public string AddressZipCheck { get; set; }

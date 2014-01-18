@@ -50,26 +50,26 @@ namespace Stripe.Tests
             var customer = CreateCustomer();
 
             var updatedCustomer = gateway.Post(new UpdateStripeCustomer
-                {
-                    Id = customer.Id,
-                    Card = new StripeCard
-                        {
-                            Id = customer.Cards.Data[0].Id,
-                            Name = "Updated Test Card",
-                            Number = "4242424242424242",
-                            Cvc = "123",
-                            ExpMonth = 1,
-                            ExpYear = 2015,
-                            AddressLine1 = "1 Address Road",
-                            AddressLine2 = "12345",
-                            AddressZip = "City",
-                            AddressState = "NY",
-                            AddressCountry = "US",
-                        },
-                    AccountBalance = 20000,
-                    Description = "Updated Description",
-                    Email = "updated@email.com",
-                });
+            {
+                Id = customer.Id,
+                Card = new StripeCard
+                    {
+                        Id = customer.Cards.Data[0].Id,
+                        Name = "Updated Test Card",
+                        Number = "4242424242424242",
+                        Cvc = "123",
+                        ExpMonth = 1,
+                        ExpYear = 2015,
+                        AddressLine1 = "1 Address Road",
+                        AddressLine2 = "12345",
+                        AddressZip = "City",
+                        AddressState = "NY",
+                        AddressCountry = "US",
+                    },
+                AccountBalance = 20000,
+                Description = "Updated Description",
+                Email = "updated@email.com",
+            });
 
             updatedCustomer.PrintDump();
 
@@ -84,12 +84,12 @@ namespace Stripe.Tests
         {
             var customer = CreateCustomer();
 
-            var customers = gateway.Get(new GetStripeCustomers());
+            var deletedRef = gateway.Delete(new DeleteStripeCustomer { Id = customer.Id });
 
-            customers.PrintDump();
+            deletedRef.PrintDump();
 
-            Assert.That(customers.Count, Is.GreaterThan(0));
-            Assert.That(customers.Data[0].Id, Is.Not.Null);
+            Assert.That(deletedRef.Id, Is.EqualTo(customer.Id));
+            Assert.That(deletedRef.Deleted);
         }
 
         [Test]

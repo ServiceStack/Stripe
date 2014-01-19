@@ -355,13 +355,13 @@ namespace ServiceStack.Stripe
                 {
                     req.Accept = MimeTypes.Json;
                     req.Credentials = Credentials;
+                    if (method == HttpMethods.Post || method == HttpMethods.Put)
+                        req.ContentType = MimeTypes.FormUrlEncoded;
+
                     PclExport.Instance.Config(req,
                         userAgent: UserAgent,
                         timeout: Timeout,
                         preAuthenticate: true);
-
-                    if (method == HttpMethods.Post)
-                        req.ContentType = MimeTypes.FormUrlEncoded;
                 });
 
                 return response;
@@ -374,8 +374,7 @@ namespace ServiceStack.Stripe
                 if (ex.IsAny400())
                 {
                     var result = errorBody.FromJson<StripeErrors>();
-                    throw new StripeException(result.Error)
-                    {
+                    throw new StripeException(result.Error) {
                         StatusCode = errorStatus
                     };
                 }

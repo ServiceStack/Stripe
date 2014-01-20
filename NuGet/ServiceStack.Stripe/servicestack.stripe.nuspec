@@ -3,7 +3,7 @@
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>ServiceStack.Stripe</id>
     <title>PCL Typed message-based .NET Client Gateway for Stripe's REST API</title>
-    <version>4.0.0</version> 
+    <version>4.0.8</version> 
     <authors>Service Stack</authors> 
     <owners>Service Stack</owners>
     <summary>PCL Typed message-based .NET Client Gateway for Stripe's REST API</summary>

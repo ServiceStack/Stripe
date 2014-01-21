@@ -18,7 +18,7 @@ Install from NuGet with:
 
     PM> Install-Package ServiceStack.Stripe
 
-_* depends on **ServiceStack.Client.Pcl**, ServiceStack v4 [free-quotas](https://servicestack.net/download#free-quotas) apply._
+_* depends on **ServiceStack.Client.Pcl** commercial library, ServiceStack v4 [free-quotas](https://servicestack.net/download#free-quotas) apply._
 
 
 ## Usage

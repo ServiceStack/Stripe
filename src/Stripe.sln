@@ -6,6 +6,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8336FEA3-D52A-48CC-9EC3-604C8ACAFBB0}"
 	ProjectSection(SolutionItems) = preProject
 		..\build\copy.bat = ..\build\copy.bat
+		..\README.md = ..\README.md
 		..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec = ..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec
 		..\NuGet\ServiceStack.Stripe.Pcl\servicestack.stripe.pcl.nuspec = ..\NuGet\ServiceStack.Stripe.Pcl\servicestack.stripe.pcl.nuspec
 	EndProjectSection

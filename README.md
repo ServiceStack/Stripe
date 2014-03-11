@@ -7,7 +7,7 @@ Used by [servicestack.net](http://servicestack.net/) to process merhcant payment
 ## Features
 
   - **Small**, typed, message-based API uses only clean DTO's and fits in a single [StripeGateway.cs](https://github.com/ServiceStack/Stripe/blob/master/src/Stripe/StripeGateway.cs)
-  - **Portable** profile supporting .NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store clients
+  - **Portable** profile avialable supporting .NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store clients
   - **Open-ended**, can use custom declarative DTO's defined in your own app to access new APIs  
   - **Testable**, implements the mockable [IRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack.Interfaces/IRestGateway.cs), can [return test data](https://github.com/ServiceStack/ServiceStack/blob/master/tests/ServiceStack.Common.Tests/MockRestGatewayTests.cs) with a generic [MockRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack/Testing/MockRestGateway.cs)
   - See [Stripe.Tests](https://github.com/ServiceStack/Stripe/tree/master/tests/Stripe.Tests) for more example usages.
@@ -18,8 +18,11 @@ Install from NuGet with:
 
     PM> Install-Package ServiceStack.Stripe
 
-_* depends on **ServiceStack.Client.Pcl** commercial library, ServiceStack v4 [free-quotas](https://servicestack.net/download#free-quotas) apply._
+_* depends on **ServiceStack.Client** commercial library, ServiceStack v4 [free-quotas](https://servicestack.net/download#free-quotas) apply._
 
+### Portable Version (.NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store) 
+
+    PM> Install-Package ServiceStack.Stripe.Pcl
 
 ## Usage
 

@@ -7,7 +7,7 @@ Used by [servicestack.net](http://servicestack.net/) to process merhcant payment
 ## Features
 
   - **Small**, typed, message-based API uses only clean DTO's and fits in a single [StripeGateway.cs](https://github.com/ServiceStack/Stripe/blob/master/src/Stripe/StripeGateway.cs)
-  - **Portable** profile avialable supporting .NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store clients
+  - **Portable** profile available supporting .NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store clients
   - **Open-ended**, can use custom declarative DTO's defined in your own app to access new APIs  
   - **Testable**, implements the mockable [IRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack.Interfaces/IRestGateway.cs), can [return test data](https://github.com/ServiceStack/ServiceStack/blob/master/tests/ServiceStack.Common.Tests/MockRestGatewayTests.cs) with a generic [MockRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack/Testing/MockRestGateway.cs)
   - See [Stripe.Tests](https://github.com/ServiceStack/Stripe/tree/master/tests/Stripe.Tests) for more example usages.

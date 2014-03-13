@@ -392,7 +392,8 @@ namespace ServiceStack.Stripe
             {
                 jsConfigScope = JsConfig.With(dateHandler: DateHandler.UnixTime,
                                               propertyConvention: PropertyConvention.Lenient,
-                                              emitLowercaseUnderscoreNames: true);
+                                              emitLowercaseUnderscoreNames: true,
+                                              emitCamelCaseNames:false);
 
                 holdQsStrategy = QueryStringSerializer.ComplexTypeStrategy;
                 QueryStringSerializer.ComplexTypeStrategy = QueryStringStrategy.FormUrlEncoded;

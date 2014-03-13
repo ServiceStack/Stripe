@@ -28,6 +28,23 @@ namespace Stripe.Tests
         }
 
         [Test]
+        public void Can_Create_Customer_with_conflicting_JsConfig()
+        {
+            JsConfig.EmitCamelCaseNames = true;
+
+            var customer = CreateCustomer();
+
+            customer.PrintDump();
+
+            Assert.That(customer.Id, Is.Not.Null);
+            Assert.That(customer.Email, Is.EqualTo("test@email.com"));
+            Assert.That(customer.Cards.Count, Is.EqualTo(1));
+            Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
+            Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
+            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2015));
+        }
+
+        [Test]
         public void Can_Get_Customer()
         {
             var customer = CreateCustomer();

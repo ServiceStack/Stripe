@@ -170,6 +170,34 @@ var customer = gateway.Post(new CreateStripeCustomer
 });
 ```
 
+### Creating a New Customer with a Card Token
+
+```csharp
+ var cardToken = gateway.Post(new CreateStripeToken {
+    Card = new StripeCard
+    {
+        Name = "Test Card",
+        Number = "4242424242424242",
+        Cvc = "123",
+        ExpMonth = 1,
+        ExpYear = 2015,
+        AddressLine1 = "1 Address Road",
+        AddressLine2 = "12345",
+        AddressZip = "City",
+        AddressState = "NY",
+        AddressCountry = "US",
+    },
+});
+
+var customer = gateway.Post(new CreateStripeCustomerWithToken
+{
+    AccountBalance = 10000,
+    Card = cardToken.Id,
+    Description = "Description",
+    Email = "test@email.com",
+});
+```
+
 ### Retrieving a Customer
 
 

@@ -3,7 +3,7 @@
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>ServiceStack.Stripe</id>
     <title>Typed message-based .NET Client Gateway for Stripe's REST API</title>
-    <version>4.0.22</version> 
+    <version>4.0.23</version> 
     <authors>Service Stack</authors> 
     <owners>Service Stack</owners>
     <summary>Typed message-based .NET Client Gateway for Stripe's REST API</summary>
@@ -19,7 +19,7 @@
     <language>en-US</language> 
     <copyright>ServiceStack 2014 and contributors</copyright>
     <dependencies>
-      <dependency id="ServiceStack.Client" version="4.0.22" />
+      <dependency id="ServiceStack.Client" version="4.0.23" />
     </dependencies>
   </metadata>
   <files>

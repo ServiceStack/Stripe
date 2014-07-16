@@ -28,6 +28,43 @@ namespace Stripe.Tests
         }
 
         [Test]
+        public void Can_Create_Customer_with_Card_Token()
+        {
+            var cardToken = gateway.Post(new CreateStripeToken {
+                Card = new StripeCard
+                {
+                    Name = "Test Card",
+                    Number = "4242424242424242",
+                    Cvc = "123",
+                    ExpMonth = 1,
+                    ExpYear = 2015,
+                    AddressLine1 = "1 Address Road",
+                    AddressLine2 = "12345",
+                    AddressZip = "City",
+                    AddressState = "NY",
+                    AddressCountry = "US",
+                },
+            });
+
+            var customer = gateway.Post(new CreateStripeCustomerWithToken
+            {
+                AccountBalance = 10000,
+                Card = cardToken.Id,
+                Description = "Description",
+                Email = "test@email.com",
+            });
+
+            customer.PrintDump();
+
+            Assert.That(customer.Id, Is.Not.Null);
+            Assert.That(customer.Email, Is.EqualTo("test@email.com"));
+            Assert.That(customer.Cards.Count, Is.EqualTo(1));
+            Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
+            Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
+            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2015));
+        }
+
+        [Test]
         public void Can_Create_Customer_with_conflicting_JsConfig()
         {
             JsConfig.EmitCamelCaseNames = true;

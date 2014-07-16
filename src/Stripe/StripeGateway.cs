@@ -83,6 +83,19 @@ namespace ServiceStack.Stripe
         public DateTime? TrialEnd { get; set; }
     }
 
+    [Route("/customers")]
+    public class CreateStripeCustomerWithToken : IPost, IReturn<StripeCustomer>
+    {
+        public int AccountBalance { get; set; }
+        public string Card { get; set; }
+        public string Coupon { get; set; }
+        public string Description { get; set; }
+        public string Email { get; set; }
+        public string Plan { get; set; }
+        public int? Quantity { get; set; }
+        public DateTime? TrialEnd { get; set; }
+    }
+
     [Route("/customers/{Id}")]
     public class GetStripeCustomer : IGet, IReturn<StripeCustomer>
     {
@@ -318,6 +331,24 @@ namespace ServiceStack.Stripe
     public class GetUpcomingStripeInvoice : IGet, IReturn<StripeInvoice>
     {
         public string Customer { get; set; }
+    }
+
+    /* Tokens */
+    [Route("/tokens")]
+    public class CreateStripeToken : IPost, IReturn<StripeToken>
+    {
+        public StripeCard Card { get; set; }
+
+        public string Customer { get; set; }
+    }
+
+    public class StripeToken : StripeId
+    {
+        public bool Livemode { get; set; }
+        public DateTime Created { get; set; }
+        public bool Used { get; set; }
+        public string Type { get; set; }
+        public StripeCard Card { get; set; }
     }
 
 

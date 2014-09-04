@@ -19,7 +19,7 @@
     <language>en-US</language> 
     <copyright>ServiceStack 2014 and contributors</copyright>
     <dependencies>
-      <dependency id="ServiceStack.Client.Pcl" version="4.0.31" />
+      <dependency id="ServiceStack.Client" version="4.0.31" />
     </dependencies>
   </metadata>
   <files>

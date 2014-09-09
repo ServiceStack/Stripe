@@ -655,7 +655,7 @@ namespace ServiceStack.Stripe.Types
         public string Email { get; set; }
         public bool? Deliquent { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
-        public StripeSubscription Subscription { get; set; }
+        public StripeCollection<StripeSubscription> Subscriptions { get; set; }
         public StripeDiscount Discount { get; set; }
         public int AccountBalance { get; set; }
         public StripeCollection<StripeCard> Cards { get; set; }

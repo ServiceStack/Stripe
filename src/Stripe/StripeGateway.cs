@@ -141,7 +141,6 @@ namespace ServiceStack.Stripe
         public StripeCard Card { get; set; }
     }
 
-
     [Route("/customers/{CustomerId}/cards/{CardId}")]
     public class GetStripeCard : IGet, IReturn<StripeCard>
     {

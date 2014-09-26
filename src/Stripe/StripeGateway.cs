@@ -141,6 +141,7 @@ namespace ServiceStack.Stripe
         public StripeCard Card { get; set; }
     }
 
+
     [Route("/customers/{CustomerId}/cards/{CardId}")]
     public class GetStripeCard : IGet, IReturn<StripeCard>
     {
@@ -206,6 +207,15 @@ namespace ServiceStack.Stripe
         public string CustomerId { get; set; }
         public bool AtPeriodEnd { get; set; }
     }
+
+
+    [Route("/customers/{CustomerId}/subscriptions/{SubscriptionId}")]
+    public class GetStripeSubscription : IGet, IReturn<StripeSubscription>
+    {
+        public string CustomerId { get; set; }
+        public string SubscriptionId { get; set; }
+    }
+
 
     /* Plans
      * https://stripe.com/docs/api/curl#plans

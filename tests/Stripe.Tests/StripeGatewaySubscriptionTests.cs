@@ -58,5 +58,29 @@ namespace Stripe.Tests
             Assert.That(cancelled.Id, Is.EqualTo(subscription.Id));
             Assert.That(cancelled.Status, Is.EqualTo(StripeSubscriptionStatus.Canceled));
         }
+
+        [Test]
+        public void Can_Get_Subscription()
+        {
+            var customer = CreateCustomer();
+            var plan = GetOrCreatePlan();
+
+            var subscription = gateway.Post(new SubscribeStripeCustomer
+            {
+                CustomerId = customer.Id,
+                Plan = plan.Id,
+                Quantity = 1,
+            });
+
+            var retreivedSubscription = gateway.Get(new GetStripeSubscription
+            {
+                CustomerId = customer.Id,
+                SubscriptionId = subscription.Id
+            });
+
+            Assert.That(retreivedSubscription.Customer, Is.EqualTo(customer.Id));
+            Assert.That(retreivedSubscription.Id, Is.EqualTo(subscription.Id));
+            Assert.That(plan.Id, Is.EqualTo(retreivedSubscription.Plan.Id));
+        }
     }
 }

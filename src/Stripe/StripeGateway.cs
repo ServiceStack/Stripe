@@ -207,6 +207,15 @@ namespace ServiceStack.Stripe
         public bool AtPeriodEnd { get; set; }
     }
 
+
+    [Route("/customers/{CustomerId}/subscriptions/{SubscriptionId}")]
+    public class GetStripeSubscription : IGet, IReturn<StripeSubscription>
+    {
+        public string CustomerId { get; set; }
+        public string SubscriptionId { get; set; }
+    }
+
+
     /* Plans
      * https://stripe.com/docs/api/curl#plans
      */

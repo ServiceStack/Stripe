@@ -20,9 +20,7 @@ Install from NuGet with:
 
 _* depends on [ServiceStack.Text commercial library](https://servicestack.net/text), ServiceStack v4 [free-quotas](https://servicestack.net/download#free-quotas) apply._
 
-### Portable Version (.NET 4.5, iOS, Android + Windows Store) 
-
-    PM> Install-Package ServiceStack.Stripe.Pcl
+Includes Portable Version (.NET 4.5, iOS, Android + Windows Store) 
 
 ## Usage
 

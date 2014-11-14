@@ -3,14 +3,14 @@
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>ServiceStack.Stripe.Pcl</id>
     <title>PCL Typed message-based .NET Client Gateway for Stripe's REST API</title>
-    <version>4.0.33</version> 
+    <version>4.0.34</version> 
     <authors>Service Stack</authors> 
     <owners>Service Stack</owners>
-    <summary>PCL Typed message-based .NET Client Gateway for Stripe's REST API</summary>
+    <summary>PCL Typed message-based .NET Client Gateway for Stripe's REST API (deprecated)</summary>
     <description>
-      A Portable Class Library containing a typed message-based .NET client gateway for accessing Stripe's REST API.
-      Used by servicestack.net to process merhcant payments and recurring subcriptions.
-     </description> 
+      This package is no longer maintained as the PCL builds have been merged into the main "ServiceStack.Stripe" NuGet package:
+      https://www.nuget.org/packages/ServiceStack.Stripe/
+    </description> 
     <projectUrl>https://github.com/ServiceStack/Stripe</projectUrl>
     <licenseUrl>https://servicestack.net/terms</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -19,7 +19,7 @@
     <language>en-US</language> 
     <copyright>ServiceStack 2014 and contributors</copyright>
     <dependencies>
-      <dependency id="ServiceStack.Client" version="4.0.33" />
+      <dependency id="ServiceStack.Client" version="4.0.34" />
     </dependencies>
   </metadata>
   <files>

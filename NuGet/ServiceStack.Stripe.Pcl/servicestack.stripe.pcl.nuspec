@@ -6,7 +6,7 @@
     <version>4.0.34</version> 
     <authors>Service Stack</authors> 
     <owners>Service Stack</owners>
-    <summary>PCL Typed message-based .NET Client Gateway for Stripe's REST API (deprecated)</summary>
+    <summary>ServiceStack.Stripe.Pcl (deprecated)</summary>
     <description>
       This package is no longer maintained as the PCL builds have been merged into the main "ServiceStack.Stripe" NuGet package.
     </description> 

@@ -8,8 +8,7 @@
     <owners>Service Stack</owners>
     <summary>PCL Typed message-based .NET Client Gateway for Stripe's REST API (deprecated)</summary>
     <description>
-      This package is no longer maintained as the PCL builds have been merged into the main "ServiceStack.Stripe" NuGet package:
-      https://www.nuget.org/packages/ServiceStack.Stripe/
+      This package is no longer maintained as the PCL builds have been merged into the main "ServiceStack.Stripe" NuGet package.
     </description> 
     <projectUrl>https://github.com/ServiceStack/Stripe</projectUrl>
     <licenseUrl>https://servicestack.net/terms</licenseUrl>

@@ -5,10 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stripe.Tests", "..\tests\St
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8336FEA3-D52A-48CC-9EC3-604C8ACAFBB0}"
 	ProjectSection(SolutionItems) = preProject
-		..\build\copy.bat = ..\build\copy.bat
+		..\build\build.proj = ..\build\build.proj
+		..\build\build.tasks = ..\build\build.tasks
 		..\README.md = ..\README.md
 		..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec = ..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec
-		..\NuGet\ServiceStack.Stripe.Pcl\servicestack.stripe.pcl.nuspec = ..\NuGet\ServiceStack.Stripe.Pcl\servicestack.stripe.pcl.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stripe.Pcl", "Stripe.Pcl\Stripe.Pcl.csproj", "{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}"

@@ -662,7 +662,7 @@ namespace ServiceStack.Stripe.Types
         public bool Livemode { get; set; }
         public string Description { get; set; }
         public string Email { get; set; }
-        public bool? Deliquent { get; set; }
+        public bool? Delinquent { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
         public StripeCollection<StripeSubscription> Subscriptions { get; set; }
         public StripeDiscount Discount { get; set; }

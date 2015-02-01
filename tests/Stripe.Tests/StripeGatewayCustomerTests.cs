@@ -24,7 +24,7 @@ namespace Stripe.Tests
             Assert.That(customer.Cards.Count, Is.EqualTo(1));
             Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2015));
+            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2020));
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Stripe.Tests
                     Number = "4242424242424242",
                     Cvc = "123",
                     ExpMonth = 1,
-                    ExpYear = 2015,
+                    ExpYear = 2020,
                     AddressLine1 = "1 Address Road",
                     AddressLine2 = "12345",
                     AddressZip = "City",
@@ -61,7 +61,7 @@ namespace Stripe.Tests
             Assert.That(customer.Cards.Count, Is.EqualTo(1));
             Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2015));
+            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2020));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Stripe.Tests
             Assert.That(customer.Cards.Count, Is.EqualTo(1));
             Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2015));
+            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2020));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Stripe.Tests
                         Number = "4242424242424242",
                         Cvc = "123",
                         ExpMonth = 1,
-                        ExpYear = 2015,
+                        ExpYear = 2020,
                         AddressLine1 = "1 Address Road",
                         AddressLine2 = "12345",
                         AddressZip = "City",

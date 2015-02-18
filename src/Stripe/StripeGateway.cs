@@ -531,7 +531,7 @@ namespace ServiceStack.Stripe.Types
 
     public class StripeObject
     {
-        public StripeType Object { get; set; }
+        public StripeType? Object { get; set; }
     }
 
     public class StripeId : StripeObject
@@ -541,23 +541,23 @@ namespace ServiceStack.Stripe.Types
 
     public enum StripeType
     {
-        Unknown,
-        Account,
-        Card,
-        Charge,
-        Coupon,
-        Customer,
-        Discount,
-        Dispute,
-        Event,
-        InvoiceItem,
-        Invoice,
-        Line_Item,
-        Plan,
-        Subscription,
-        Token,
-        Transfer,
-        List,
+        unknown,
+        account,
+        card,
+        charge,
+        coupon,
+        customer,
+        discount,
+        dispute,
+        @event,
+        invoiceitem,
+        invoice,
+        line_item,
+        plan,
+        subscription,
+        token,
+        transfer,
+        list,
     }
 
     public class StripeInvoice : StripeId

@@ -113,6 +113,7 @@ namespace ServiceStack.Stripe
         public string DefaultCard { get; set; }
         public string Description { get; set; }
         public string Email { get; set; }
+        public string Source { get; set; }
     }
 
     [Route("/customers/{Id}")]

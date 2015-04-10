@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using ServiceStack.Stripe;
 using ServiceStack.Text;
 
@@ -27,6 +28,71 @@ namespace Stripe.Tests
             charge.PrintDump();
 
             Assert.That(charge.Id, Is.Not.Null);
+            Assert.That(charge.Customer, Is.EqualTo(customer.Id));
+            Assert.That(charge.Amount, Is.EqualTo(100));
+            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Paid, Is.True);
+        }
+
+        [Test]
+        public void Can_Charge_Customer_with_idempotency_key()
+        {
+            var customer = CreateCustomer();
+            var idempotencyKey = Guid.NewGuid();
+            
+            var chargeInput = new ChargeStripeCustomer
+            {
+                Amount = 100,
+                Customer = customer.Id,
+                Currency = "usd",
+                Description = "Test Charge Customer",
+            };
+
+            var charge = gateway.Post(chargeInput, idempotencyKey.ToString());
+
+            charge.PrintDump();
+
+            Assert.That(charge.Id, Is.Not.Null);
+            Assert.That(charge.Customer, Is.EqualTo(customer.Id));
+            Assert.That(charge.Amount, Is.EqualTo(100));
+            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Paid, Is.True);
+
+            var charge2 = gateway.Post(chargeInput, idempotencyKey.ToString());
+            Assert.That(charge.Id, Is.Not.Null);
+            Assert.That(charge2.Id, Is.EqualTo(charge.Id)); //with idempotency key should not create additional charge
+            Assert.That(charge.Customer, Is.EqualTo(customer.Id));
+            Assert.That(charge.Amount, Is.EqualTo(100));
+            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Paid, Is.True);
+        }
+
+        [Test]
+        public void Can_Charge_Customer_without_idempotency_key()
+        {
+            var customer = CreateCustomer();            
+
+            var chargeInput = new ChargeStripeCustomer
+            {
+                Amount = 100,
+                Customer = customer.Id,
+                Currency = "usd",
+                Description = "Test Charge Customer",
+            };
+
+            var charge = gateway.Post(chargeInput);
+
+            charge.PrintDump();
+
+            Assert.That(charge.Id, Is.Not.Null);
+            Assert.That(charge.Customer, Is.EqualTo(customer.Id));
+            Assert.That(charge.Amount, Is.EqualTo(100));
+            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Paid, Is.True);
+
+            var charge2 = gateway.Post(chargeInput);
+            Assert.That(charge.Id, Is.Not.Null);
+            Assert.That(charge2.Id, Is.Not.EqualTo(charge.Id)); //without idempotency key should create additional charge
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
             Assert.That(charge.Card.Last4, Is.EqualTo("4242"));

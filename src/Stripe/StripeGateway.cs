@@ -385,7 +385,7 @@ namespace ServiceStack.Stripe
 			Currency = Currencies.UnitedStatesDollar;
         }
 
-        protected virtual string Send(string relativeUrl, string method, string body)
+        protected virtual string Send(string relativeUrl, string method, string body, string idempotencyKey)
         {
             try
             {
@@ -397,6 +397,9 @@ namespace ServiceStack.Stripe
                     req.Credentials = Credentials;
                     if (method == HttpMethods.Post || method == HttpMethods.Put)
                         req.ContentType = MimeTypes.FormUrlEncoded;
+
+                    if(!string.IsNullOrWhiteSpace(idempotencyKey))                       
+                        req.Headers["Idempotency-Key"] = idempotencyKey;
 
                     PclExport.Instance.Config(req,
                         userAgent: UserAgent,
@@ -444,16 +447,16 @@ namespace ServiceStack.Stripe
                 QueryStringSerializer.ComplexTypeStrategy = holdQsStrategy;
                 jsConfigScope.Dispose();
             }
-        }
+        }      
 
-        public T Send<T>(IReturn<T> request, string method, bool sendRequestBody = true)
+        public T Send<T>(IReturn<T> request, string method, bool sendRequestBody = true, string idempotencyKey = null)
         {
             using (new ConfigScope())
             {
                 var relativeUrl = request.ToUrl(method);
                 var body = sendRequestBody ? QueryStringSerializer.SerializeToString(request) : null;
 
-                var json = Send(relativeUrl, method, body);
+                var json = Send(relativeUrl, method, body, idempotencyKey);
 
                 var response = json.FromJson<T>();
                 return response;
@@ -483,6 +486,11 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Post);
         }
 
+        public T Post<T>(IReturn<T> request, string idempotencyKey)
+        {
+            return Send(request, HttpMethods.Post, true, idempotencyKey);
+        }
+      
         public T Put<T>(IReturn<T> request)
         {
             return Send(request, HttpMethods.Put);

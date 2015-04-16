@@ -525,10 +525,12 @@ namespace ServiceStack.Stripe.Types
         {
             Code = error.Code;
             Param = error.Param;
+            Type = error.Type;
         }
 
         public string Code { get; set; }
         public string Param { get; set; }
+        public string Type { get; set; }
         public HttpStatusCode StatusCode { get; set; }
     }
 

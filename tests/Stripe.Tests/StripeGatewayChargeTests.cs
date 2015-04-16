@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Net;
 using NUnit.Framework;
 using ServiceStack.Stripe;
+using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
+using GetStripeCharge = ServiceStack.Stripe.GetStripeCharge;
+using UpdateStripeCharge = ServiceStack.Stripe.UpdateStripeCharge;
 
 namespace Stripe.Tests
 {
@@ -33,6 +37,52 @@ namespace Stripe.Tests
             Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
+
+        [Test]
+        public void Can_Handle_Charge_Customer_Nothing()
+        {
+            var customer = CreateCustomer();
+
+            try
+            {
+                var charge = gateway.Post(new ChargeStripeCustomer
+                {
+                    Amount = 0,
+                    Customer = customer.Id,
+                    Currency = "usd",
+                    Description = "Test Charge Customer",
+                });
+            }
+            catch (StripeException ex)
+            {
+                Assert.That(ex.Type, Is.EqualTo("invalid_request_error"));
+                Assert.That(ex.Param, Is.EqualTo("amount"));
+                Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            }
+        }
+
+
+        [Test]
+        public void Can_Handle_Charge_Invalid_Customer()
+        {
+            try
+            {
+                var charge = gateway.Post(new ChargeStripeCustomer
+                {
+                    Amount = 100,
+                    Customer = "thisisnotavalidcustomerid",
+                    Currency = "usd",
+                    Description = "Test Charge Customer",
+                });
+            }
+            catch (StripeException ex)
+            {
+                Assert.That(ex.Type, Is.EqualTo("invalid_request_error"));
+                Assert.That(ex.Param, Is.EqualTo("customer"));
+                Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+            }
+        }
+
 
         [Test]
         public void Can_Charge_Customer_with_idempotency_key()

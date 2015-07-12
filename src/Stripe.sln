@@ -11,28 +11,32 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8336FEA3
 		..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec = ..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stripe.Pcl", "Stripe.Pcl\Stripe.Pcl.csproj", "{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stripe", "Stripe\Stripe.csproj", "{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		MonoTouch|Any CPU = MonoTouch|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Signed|Any CPU = Signed|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.MonoTouch|Any CPU.ActiveCfg = Release|Any CPU
+		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.MonoTouch|Any CPU.Build.0 = Release|Any CPU
 		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}.Signed|Any CPU.Build.0 = Release|Any CPU
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.MonoTouch|Any CPU.ActiveCfg = Release|Any CPU
+		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.MonoTouch|Any CPU.Build.0 = Release|Any CPU
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Signed|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -88,13 +88,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Stripe.Pcl\Stripe.Pcl.csproj">
-      <Project>{6ae268ca-fcc2-48cd-bb3a-91c44eba07d4}</Project>
-      <Name>Stripe.Pcl</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\..\src\Stripe\Stripe.csproj">
+      <Project>{34e0cac2-14c6-492a-aa02-dafbf873f6fa}</Project>
+      <Name>Stripe</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

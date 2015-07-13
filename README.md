@@ -22,6 +22,10 @@ _* depends on [ServiceStack.Text commercial library](https://servicestack.net/te
 
 Includes Portable Version (.NET 4.5, iOS, Android + Windows Store) 
 
+## Download from MyGet
+
+If you're having issues with the latest v4.0.42 release you can upgrade to the [interim pre-release packages on MyGet](https://github.com/ServiceStack/ServiceStack/wiki/MyGet).
+
 ## Usage
 
 Requires a [registered Stripe API Key](https://manage.stripe.com/register), e.g:

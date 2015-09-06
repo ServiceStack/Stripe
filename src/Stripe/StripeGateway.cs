@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
 
@@ -385,26 +386,46 @@ namespace ServiceStack.Stripe
 			Currency = Currencies.UnitedStatesDollar;
         }
 
+        protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)
+        {
+            req.Accept = MimeTypes.Json;
+            req.Credentials = Credentials;
+
+            if (method == HttpMethods.Post || method == HttpMethods.Put)
+                req.ContentType = MimeTypes.FormUrlEncoded;
+
+            if (!string.IsNullOrWhiteSpace(idempotencyKey))
+                req.Headers["Idempotency-Key"] = idempotencyKey;
+
+            PclExport.Instance.Config(req,
+                userAgent: UserAgent,
+                timeout: Timeout,
+                preAuthenticate: true);
+        }
+
+        protected virtual void HandleStripeException(WebException ex)
+        {
+            string errorBody = ex.GetResponseBody();
+            var errorStatus = ex.GetStatus() ?? HttpStatusCode.BadRequest;
+
+            if (ex.IsAny400())
+            {
+                var result = errorBody.FromJson<StripeErrors>();
+                throw new StripeException(result.Error)
+                {
+                    StatusCode = errorStatus
+                };
+            }
+        }
+
         protected virtual string Send(string relativeUrl, string method, string body, string idempotencyKey)
         {
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
 
-                var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req =>
-                {
-                    req.Accept = MimeTypes.Json;
-                    req.Credentials = Credentials;
-                    if (method == HttpMethods.Post || method == HttpMethods.Put)
-                        req.ContentType = MimeTypes.FormUrlEncoded;
-
-                    if(!string.IsNullOrWhiteSpace(idempotencyKey))                       
-                        req.Headers["Idempotency-Key"] = idempotencyKey;
-
-                    PclExport.Instance.Config(req,
-                        userAgent: UserAgent,
-                        timeout: Timeout,
-                        preAuthenticate: true);
+                var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req => {
+                    InitRequest(req, method, idempotencyKey);
                 });
 
                 return response;
@@ -426,6 +447,28 @@ namespace ServiceStack.Stripe
             }
         }
 
+        protected virtual async Task<string> SendAsync(string relativeUrl, string method, string body, string idempotencyKey)
+        {
+            try
+            {
+                var url = BaseUrl.CombineWith(relativeUrl);
+
+                var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req => {
+                    InitRequest(req, method, idempotencyKey);
+                });
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                var webEx = ex.UnwrapIfSingleException() as WebException;
+                if (webEx != null)
+                    HandleStripeException(webEx);
+
+                throw;
+            }
+        }
+
         class ConfigScope : IDisposable
         {
             private readonly WriteComplexTypeDelegate holdQsStrategy;
@@ -434,9 +477,9 @@ namespace ServiceStack.Stripe
             public ConfigScope()
             {
                 jsConfigScope = JsConfig.With(dateHandler: DateHandler.UnixTime,
-                                              propertyConvention: PropertyConvention.Lenient,
-                                              emitLowercaseUnderscoreNames: true,
-                                              emitCamelCaseNames:false);
+                    propertyConvention: PropertyConvention.Lenient,
+                    emitLowercaseUnderscoreNames: true,
+                    emitCamelCaseNames:false);
 
                 holdQsStrategy = QueryStringSerializer.ComplexTypeStrategy;
                 QueryStringSerializer.ComplexTypeStrategy = QueryStringStrategy.FormUrlEncoded;
@@ -463,17 +506,46 @@ namespace ServiceStack.Stripe
             }
         }
 
+        public async Task<T> SendAsync<T>(IReturn<T> request, string method, bool sendRequestBody = true, string idempotencyKey = null)
+        {
+            string relativeUrl;
+            string body;
+
+            using (new ConfigScope())
+            {
+                relativeUrl = request.ToUrl(method);
+                body = sendRequestBody ? QueryStringSerializer.SerializeToString(request) : null;
+            }
+
+            var json = await SendAsync(relativeUrl, method, body, idempotencyKey);
+
+            using (new ConfigScope())
+            {
+                var response = json.FromJson<T>();
+                return response;
+            }
+        }
+
+        private static string GetMethod<T>(IReturn<T> request)
+        {
+            var method = request is IPost ? 
+                  HttpMethods.Post
+                : request is IPut ? 
+                  HttpMethods.Put
+                : request is IDelete ? 
+                  HttpMethods.Delete
+                : HttpMethods.Get;
+            return method;
+        }
+
         public T Send<T>(IReturn<T> request)
         {
-            var method = request is IPost ?
-                  HttpMethods.Post
-                : request is IPut ?
-                  HttpMethods.Put
-                : request is IDelete ?
-                  HttpMethods.Delete :
-                  HttpMethods.Get;
+            return Send(request, GetMethod(request), sendRequestBody: false);
+        }
 
-            return Send(request, method, sendRequestBody: false);
+        public Task<T> SendAsync<T>(IReturn<T> request)
+        {
+            return SendAsync(request, GetMethod(request), sendRequestBody: false);
         }
 
         public T Get<T>(IReturn<T> request)
@@ -481,24 +553,49 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Get, sendRequestBody: false);
         }
 
+        public Task<T> GetAsync<T>(IReturn<T> request)
+        {
+            return SendAsync(request, HttpMethods.Get, sendRequestBody: false);
+        }
+
         public T Post<T>(IReturn<T> request)
         {
             return Send(request, HttpMethods.Post);
+        }
+
+        public Task<T> PostAsync<T>(IReturn<T> request)
+        {
+            return SendAsync(request, HttpMethods.Post);
         }
 
         public T Post<T>(IReturn<T> request, string idempotencyKey)
         {
             return Send(request, HttpMethods.Post, true, idempotencyKey);
         }
-      
+
+        public Task<T> PostAsync<T>(IReturn<T> request, string idempotencyKey)
+        {
+            return SendAsync(request, HttpMethods.Post, true, idempotencyKey);
+        }
+
         public T Put<T>(IReturn<T> request)
         {
             return Send(request, HttpMethods.Put);
         }
 
+        public Task<T> PutAsync<T>(IReturn<T> request)
+        {
+            return SendAsync(request, HttpMethods.Put);
+        }
+
         public T Delete<T>(IReturn<T> request)
         {
             return Send(request, HttpMethods.Delete, sendRequestBody: false);
+        }
+
+        public Task<T> DeleteAsync<T>(IReturn<T> request)
+        {
+            return SendAsync(request, HttpMethods.Delete, sendRequestBody: false);
         }
     }
 }

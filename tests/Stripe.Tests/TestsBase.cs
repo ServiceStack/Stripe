@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using ServiceStack;
 using ServiceStack.Stripe;
 using ServiceStack.Stripe.Types;
@@ -20,7 +21,19 @@ namespace Stripe.Tests
 
         protected StripeCustomer CreateCustomer()
         {
-            var customer = gateway.Post(new CreateStripeCustomer
+            var customer = gateway.Post(CreateStripeCustomerRequest());
+            return customer;
+        }
+
+        protected async Task<StripeCustomer> CreateCustomerAsync()
+        {
+            var customer = await gateway.PostAsync(CreateStripeCustomerRequest());
+            return customer;
+        }
+
+        private static CreateStripeCustomer CreateStripeCustomerRequest()
+        {
+            return new CreateStripeCustomer
             {
                 AccountBalance = 10000,
                 Card = new StripeCard
@@ -38,8 +51,7 @@ namespace Stripe.Tests
                 },
                 Description = "Description",
                 Email = "test@email.com",
-            });
-            return customer;
+            };
         }
 
         protected StripeCoupon CreateCoupon()

@@ -76,6 +76,26 @@ Both of these calls translates to the [Retrieving a Customer](https://stripe.com
     curl https://api.stripe.com/v1/customers/cus_3552jPRgtQeRcK \
        -u yDOr26HsxyhpuRB3qbG07qfCmDhqutnA:
 
+### Open-Ended, Declarative Message-based APIs
+
+The `StripeGateway` benefits from an **Open Ended** message-based API where you're also able to use own Request DTO's to call new Stripe Services that StripeGateway has no knowledge about. E.g. The only custom code required to implement the `ChargeStripeCustomer` is this single, clean, declarative Request DTO:
+
+```csharp
+[Route("/charges")]
+public class ChargeStripeCustomer : IPost, IReturn<StripeCharge>
+{
+    public int Amount { get; set; }
+    public string Currency { get; set; }
+    public string Customer { get; set; }
+    public string Card { get; set; }
+    public string Description { get; set; }
+    public bool? Capture { get; set; }
+    public int? ApplicationFee { get; set; }
+}
+```  
+
+Which contains all the information needed to call the Stripe Service including the `/charges` relative url, using the **POST** HTTP method and the typed `StripeCharge` DTO it returns. To charge a Customer the Request DTO can either use the explicit `Post/PostAsync` or universal `Send/SendAsync` StripeGateway methods. 
+
 ## Documentation
 
 These API examples follows [Stripe's API Documentation](https://stripe.com/docs/api/).

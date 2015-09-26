@@ -7,6 +7,7 @@ Used by [servicestack.net](http://servicestack.net/) to process merhcant payment
 ## Features
 
   - **Small**, typed, message-based API uses only clean DTO's and fits in a single [StripeGateway.cs](https://github.com/ServiceStack/Stripe/blob/master/src/Stripe/StripeGateway.cs)
+  - **Async** there's an equivalent Async API's for every Sync API available
   - **Portable** profile available supporting .NET 4.5, Xamarin.iOS, Xamarin.Android and Windows Store clients
   - **Open-ended**, can use custom declarative DTO's defined in your own app to access new APIs  
   - **Testable**, implements the mockable [IRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack.Interfaces/IRestGateway.cs), can [return test data](https://github.com/ServiceStack/ServiceStack/blob/master/tests/ServiceStack.Common.Tests/MockRestGatewayTests.cs) with a generic [MockRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack/Testing/MockRestGateway.cs)
@@ -51,11 +52,23 @@ The gateway uses this type information to provide its typed API, e.g:
 StripeCustomer customer = gateway.Get(new GetStripeCustomer { Id = customerId });
 ```
 
+#### Async
+
+```csharp
+StripeCustomer customer = await gateway.GetAsync(new GetStripeCustomer { Id = customerId });
+```
+
 If you prefer, you can use the same `gateway.Send()` generic method for **all** messages as it is able to make use of 
 the `IVerb` interface marker to control which HTTP method is used, e.g.
 
 ```csharp
 StripeCustomer customer = gateway.Send(new GetStripeCustomer { Id = customerId });
+```
+
+#### Async
+
+```csharp
+StripeCustomer customer = await gateway.SendAsync(new GetStripeCustomer { Id = customerId });
 ```
 
 Both of these calls translates to the [Retrieving a Customer](https://stripe.com/docs/api/curl#retrieve_customer) HTTP Request, Example in curl:
@@ -73,6 +86,18 @@ These API examples follows [Stripe's API Documentation](https://stripe.com/docs/
 
 ```csharp
 var charge = gateway.Post(new ChargeStripeCustomer
+{
+    Amount = 100,
+    Customer = customer.Id,
+    Currency = "usd",
+    Description = "Test Charge Customer",
+});
+```
+
+#### Async
+
+```csharp
+var charge = await gateway.PostAsync(new ChargeStripeCustomer
 {
     Amount = 100,
     Customer = customer.Id,

@@ -49,7 +49,7 @@ namespace Stripe.Tests
 
             var coupons = gateway.Get(new GetStripeCoupons { Count = 20 });
 
-            Assert.That(coupons.Count, Is.GreaterThan(0));
+            Assert.That(coupons.TotalCount, Is.GreaterThan(0));
             Assert.That(coupons.Data.Count, Is.GreaterThan(0));
             Assert.That(coupons.Data[0].Id, Is.Not.Null);
         }

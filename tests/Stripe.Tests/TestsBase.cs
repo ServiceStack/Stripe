@@ -10,8 +10,8 @@ namespace Stripe.Tests
 {
     public class TestsBase
     {
-        const string LicenseTextPath = @"C:\src\appsettings.license.txt";
-        protected readonly StripeGateway gateway = new StripeGateway("sk_test_23KlmQohLKD4dfmAvxYESZ2z");
+        const string LicenseTextPath = @"C:\Users\Johann\Development\ServiceStack.license.txt";
+        protected readonly StripeGateway gateway = new StripeGateway("sk_test_303GR9wJ5Gjb5j4sDq5Ylodo");
 
         public TestsBase()
         {

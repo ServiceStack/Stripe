@@ -34,7 +34,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -105,7 +105,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
 
             var charge2 = gateway.Post(chargeInput, idempotencyKey.ToString());
@@ -113,7 +113,7 @@ namespace Stripe.Tests
             Assert.That(charge2.Id, Is.EqualTo(charge.Id)); //with idempotency key should not create additional charge
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -137,7 +137,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
 
             var charge2 = gateway.Post(chargeInput);
@@ -145,7 +145,7 @@ namespace Stripe.Tests
             Assert.That(charge2.Id, Is.Not.EqualTo(charge.Id)); //without idempotency key should create additional charge
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -168,7 +168,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -214,7 +214,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.Last4, Is.EqualTo("4242"));
+            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
 
             var refundCharge = gateway.Post(new RefundStripeCharge
@@ -279,7 +279,7 @@ namespace Stripe.Tests
 
             charges.PrintDump();
 
-            Assert.That(charges.Count, Is.GreaterThan(0));
+            Assert.That(charges.TotalCount, Is.GreaterThan(0));
             Assert.That(charges.Data[0].Id, Is.Not.Null);
         }
 
@@ -304,7 +304,7 @@ namespace Stripe.Tests
 
             charges.PrintDump();
 
-            Assert.That(charges.Count, Is.EqualTo(1));
+            Assert.That(charges.TotalCount, Is.EqualTo(1));
             Assert.That(charges.Data[0].Id, Is.Not.Null);
             Assert.That(charges.Data[0].Customer, Is.EqualTo(customer.Id));
         }

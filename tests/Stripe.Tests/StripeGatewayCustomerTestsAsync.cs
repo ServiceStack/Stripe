@@ -22,10 +22,10 @@ namespace Stripe.Tests
 
             Assert.That(customer.Id, Is.Not.Null);
             Assert.That(customer.Email, Is.EqualTo("test@email.com"));
-            Assert.That(customer.Cards.Count, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
-            Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2020));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
+            Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
+            Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
+            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
         }
 
         [Test]
@@ -59,10 +59,10 @@ namespace Stripe.Tests
 
             Assert.That(customer.Id, Is.Not.Null);
             Assert.That(customer.Email, Is.EqualTo("test@email.com"));
-            Assert.That(customer.Cards.Count, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
-            Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2020));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
+            Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
+            Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
+            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
         }
 
         [Test]
@@ -76,10 +76,10 @@ namespace Stripe.Tests
 
             Assert.That(customer.Id, Is.Not.Null);
             Assert.That(customer.Email, Is.EqualTo("test@email.com"));
-            Assert.That(customer.Cards.Count, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
-            Assert.That(customer.Cards.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Cards.Data[0].ExpYear, Is.EqualTo(2020));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
+            Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
+            Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
+            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
         }
 
         [Test]
@@ -95,8 +95,8 @@ namespace Stripe.Tests
 
             Assert.That(newCustomer.Id, Is.EqualTo(customer.Id));
             Assert.That(newCustomer.Email, Is.EqualTo("test@email.com"));
-            Assert.That(newCustomer.Cards.Count, Is.EqualTo(1));
-            Assert.That(newCustomer.Cards.Data[0].Name, Is.EqualTo("Test Card"));
+            Assert.That(newCustomer.Sources.TotalCount, Is.EqualTo(1));
+            Assert.That(newCustomer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace Stripe.Tests
                 Id = customer.Id,
                 Card = new StripeCard
                 {
-                    Id = customer.Cards.Data[0].Id,
+                    Id = customer.Sources.Data[0].Id,
                     Name = "Updated Test Card",
                     Number = "4242424242424242",
                     Cvc = "123",
@@ -130,8 +130,8 @@ namespace Stripe.Tests
 
             Assert.That(updatedCustomer.Id, Is.EqualTo(customer.Id));
             Assert.That(updatedCustomer.Email, Is.EqualTo("updated@email.com"));
-            Assert.That(updatedCustomer.Cards.Count, Is.EqualTo(1));
-            Assert.That(updatedCustomer.Cards.Data[0].Name, Is.EqualTo("Updated Test Card"));
+            Assert.That(updatedCustomer.Sources.TotalCount, Is.EqualTo(1));
+            Assert.That(updatedCustomer.Sources.Data[0].Name, Is.EqualTo("Updated Test Card"));
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace Stripe.Tests
 
             customers.PrintDump();
 
-            Assert.That(customers.Count, Is.GreaterThan(0));
+            Assert.That(customers.TotalCount, Is.GreaterThan(0));
             Assert.That(customers.Data[0].Id, Is.Not.Null);
         }
     }

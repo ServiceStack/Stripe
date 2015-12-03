@@ -12,8 +12,8 @@ using ServiceStack.Text;
 namespace ServiceStack.Stripe
 {
     /* Charges 
-     * https://stripe.com/docs/api/curl#charges
-     */
+	 * https://stripe.com/docs/api/curl#charges
+	 */
     [Route("/charges")]
     public class ChargeStripeCustomer : IPost, IReturn<StripeCharge>
     {
@@ -62,15 +62,17 @@ namespace ServiceStack.Stripe
     [Route("/charges")]
     public class GetStripeCharges : IGet, IReturn<StripeCollection<StripeCharge>>
     {
-        public int? Count { get; set; }
-        public int? Offset { get; set; }
+        public int? Limit { get; set; }
+        public string StartingAfter { get; set; }
+        public string EndingBefore { get; set; }
+
         public DateTime? Created { get; set; }
         public string Customer { get; set; }
     }
 
     /* Customers 
-     * https://stripe.com/docs/api/curl#customers
-     */
+	 * https://stripe.com/docs/api/curl#customers
+	 */
     [Route("/customers")]
     public class CreateStripeCustomer : IPost, IReturn<StripeCustomer>
     {
@@ -126,14 +128,16 @@ namespace ServiceStack.Stripe
     [Route("/customers")]
     public class GetStripeCustomers : IGet, IReturn<StripeCollection<StripeCustomer>>
     {
-        public int? Count { get; set; }
-        public int? Offset { get; set; }
+        public int? Limit { get; set; }
+        public string StartingAfter { get; set; }
+        public string EndingBefore { get; set; }
+
         public DateTime? Created { get; set; }
     }
 
     /* Cards
-     * https://stripe.com/docs/api/curl#cards
-     */
+	 * https://stripe.com/docs/api/curl#cards
+	 */
     [Route("/customers/{CustomerId}/cards")]
     public class CreateStripeCard : IPost, IReturn<StripeCard>
     {
@@ -169,25 +173,27 @@ namespace ServiceStack.Stripe
         public string Name { get; set; }
     }
 
-    [Route("/customers/{CustomerId}/cards/{CardId}")]
-    public class DeleteStripeCard : IDelete, IReturn<StripeReference>
+    [Route("/customers/{CustomerId}/sources/{CardId}")]
+    public class DeleteStripeCustomerCard : IDelete, IReturn<StripeReference>
     {
         public string CustomerId { get; set; }
         public string CardId { get; set; }
     }
 
-    [Route("/customers/{CustomerId}/cards")]
-    public class GetStripeCards : IGet, IReturn<StripeCollection<StripeCard>>
+    [Route("/customers/{CustomerId}/sources?object=card&include[]=total_count")]
+    public class GetStripeCustomerCards : IGet, IReturn<StripeCollection<StripeCard>>
     {
         public string CustomerId { get; set; }
 
-        public int? Count { get; set; }
-        public int? Offset { get; set; }
+        public int? Limit { get; set; }
+        public string StartingAfter { get; set; }
+        public string EndingBefore { get; set; }
+
     }
 
     /* Subscriptions
-     * https://stripe.com/docs/api/curl#subscriptions
-     */
+	 * https://stripe.com/docs/api/curl#subscriptions
+	 */
     [Route("/customers/{CustomerId}/subscription")]
     public class SubscribeStripeCustomer : IPost, IReturn<StripeSubscription>
     {
@@ -219,8 +225,8 @@ namespace ServiceStack.Stripe
 
 
     /* Plans
-     * https://stripe.com/docs/api/curl#plans
-     */
+	 * https://stripe.com/docs/api/curl#plans
+	 */
     [Route("/plans")]
     public class CreateStripePlan : IPost, IReturn<StripePlan>
     {
@@ -257,13 +263,14 @@ namespace ServiceStack.Stripe
     [Route("/plans")]
     public class GetStripePlans : IGet, IReturn<StripeCollection<StripePlan>>
     {
-        public int? Count { get; set; }
-        public int? Offset { get; set; }
+        public int? Limit { get; set; }
+        public string StartingAfter { get; set; }
+        public string EndingBefore { get; set; }
     }
 
     /* Coupons
-     * https://stripe.com/docs/api/curl#coupons
-     */
+	 * https://stripe.com/docs/api/curl#coupons
+	 */
     [Route("/coupons")]
     public class CreateStripeCoupon : IPost, IReturn<StripeCoupon>
     {
@@ -297,8 +304,8 @@ namespace ServiceStack.Stripe
     }
 
     /* Discounts
-     * https://stripe.com/docs/api/curl#discounts
-     */
+	 * https://stripe.com/docs/api/curl#discounts
+	 */
     [Route("/customers/{CustomerId}/discount")]
     public class DeleteStripeDiscount : IDelete, IReturn<StripeReference>
     {
@@ -306,8 +313,8 @@ namespace ServiceStack.Stripe
     }
 
     /* Invoices
-     * https://stripe.com/docs/api/curl#invoices
-     */
+	 * https://stripe.com/docs/api/curl#invoices
+	 */
 
     [Route("/invoices/{Id}")]
     public class GetStripeInvoice : IGet, IReturn<StripeInvoice>
@@ -366,6 +373,7 @@ namespace ServiceStack.Stripe
     public class StripeGateway : IRestGateway
     {
         private const string BaseUrl = "https://api.stripe.com/v1";
+        private const string APIVersion = "2015-10-16";
 
         public TimeSpan Timeout { get; set; }
 
@@ -383,7 +391,7 @@ namespace ServiceStack.Stripe
             Credentials = new NetworkCredential(apiKey, "");
             Timeout = TimeSpan.FromSeconds(60);
             UserAgent = "servicestack .net stripe v1";
-			Currency = Currencies.UnitedStatesDollar;
+            Currency = Currencies.UnitedStatesDollar;
         }
 
         protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)
@@ -396,6 +404,8 @@ namespace ServiceStack.Stripe
 
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
                 req.Headers["Idempotency-Key"] = idempotencyKey;
+
+            req.Headers["Stripe-Version"] = APIVersion;
 
             PclExport.Instance.Config(req,
                 userAgent: UserAgent,
@@ -424,7 +434,8 @@ namespace ServiceStack.Stripe
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
 
-                var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req => {
+                var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req =>
+                {
                     InitRequest(req, method, idempotencyKey);
                 });
 
@@ -438,7 +449,8 @@ namespace ServiceStack.Stripe
                 if (ex.IsAny400())
                 {
                     var result = errorBody.FromJson<StripeErrors>();
-                    throw new StripeException(result.Error) {
+                    throw new StripeException(result.Error)
+                    {
                         StatusCode = errorStatus
                     };
                 }
@@ -453,7 +465,8 @@ namespace ServiceStack.Stripe
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
 
-                var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req => {
+                var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req =>
+                {
                     InitRequest(req, method, idempotencyKey);
                 });
 
@@ -479,7 +492,7 @@ namespace ServiceStack.Stripe
                 jsConfigScope = JsConfig.With(dateHandler: DateHandler.UnixTime,
                     propertyConvention: PropertyConvention.Lenient,
                     emitLowercaseUnderscoreNames: true,
-                    emitCamelCaseNames:false);
+                    emitCamelCaseNames: false);
 
                 holdQsStrategy = QueryStringSerializer.ComplexTypeStrategy;
                 QueryStringSerializer.ComplexTypeStrategy = QueryStringStrategy.FormUrlEncoded;
@@ -490,7 +503,7 @@ namespace ServiceStack.Stripe
                 QueryStringSerializer.ComplexTypeStrategy = holdQsStrategy;
                 jsConfigScope.Dispose();
             }
-        }      
+        }
 
         public T Send<T>(IReturn<T> request, string method, bool sendRequestBody = true, string idempotencyKey = null)
         {
@@ -528,11 +541,11 @@ namespace ServiceStack.Stripe
 
         private static string GetMethod<T>(IReturn<T> request)
         {
-            var method = request is IPost ? 
+            var method = request is IPost ?
                   HttpMethods.Post
-                : request is IPut ? 
+                : request is IPut ?
                   HttpMethods.Put
-                : request is IDelete ? 
+                : request is IDelete ?
                   HttpMethods.Delete
                 : HttpMethods.Get;
             return method;
@@ -695,7 +708,7 @@ namespace ServiceStack.Stripe.Types
     public class StripeCollection<T> : StripeId
     {
         public string Url { get; set; }
-        public int Count { get; set; }
+        public int TotalCount { get; set; }
         public List<T> Data { get; set; }
     }
 
@@ -775,7 +788,8 @@ namespace ServiceStack.Stripe.Types
         public StripeCollection<StripeSubscription> Subscriptions { get; set; }
         public StripeDiscount Discount { get; set; }
         public int AccountBalance { get; set; }
-        public StripeCollection<StripeCard> Cards { get; set; }
+        public StripeCollection<StripeCard> Sources { get; set; }
+
         public bool Deleted { get; set; }
         public string DefaultCard { get; set; }
     }
@@ -797,7 +811,7 @@ namespace ServiceStack.Stripe.Types
 
     public class StripeCard : StripeId
     {
-        public string Last4 { get; set; }
+        public string DynamicLast4 { get; set; }
         public string Type { get; set; }
         public string Number { get; set; }
         public int ExpMonth { get; set; }
@@ -948,146 +962,146 @@ namespace ServiceStack.Stripe.Types
         CreditNotProcessed,
         General
     }
-    
-	public static class Currencies
-	{
-		public const string UnitedArabEmiratesDirham = "AED";
-		public const string AfghanAfghani = "AFN";
-		public const string AlbanianLek = "ALL";
-		public const string ArmenianDram = "AMD";
-		public const string NetherlandsAntilleanGulden = "ANG";
-		public const string AngolanKwanza = "AOA";
-		public const string ArgentinePeso = "ARS";
-		public const string AustralianDollar = "AUD";
-		public const string ArubanFlorin = "AWG";
-		public const string AzerbaijaniManat = "AZN";
-		public const string BosniaAndHerzegovinaConvertibleMark = "BAM";
-		public const string BarbadianDollar = "BBD";
-		public const string BangladeshiTaka = "BDT";
-		public const string BulgarianLev = "BGN";
-		public const string BurundianFran = "BIF";
-		public const string BermudianDollar = "BMD";
-		public const string BruneiDollar = "BND";
-		public const string BolivianBoliviano = "BOB";
-		public const string BrazilianReal = "BRL";
-		public const string BahamianDollar = "BSD";
-		public const string BotswanaPula = "BWP";
-		public const string BelizeDollar = "BZD";
-		public const string CanadianDollar = "CAD";
-		public const string CongoleseFranc = "CDF";
-		public const string SwissFranc = "CHF";
-		public const string ChileanPeso = "CLP";
-		public const string ChineseRenminbiYuan = "CNY";
-		public const string ColombianPeso = "COP";
-		public const string CostaRicanColón = "CRC";
-		public const string CapeVerdeanEscudo = "CVE";
-		public const string CzechKoruna = "CZK";
-		public const string DjiboutianFranc = "DJF";
-		public const string DanishKrone = "DKK";
-		public const string DominicanPeso = "DOP";
-		public const string AlgerianDinar = "DZD";
-		public const string EstonianKroon = "EEK";
-		public const string EgyptianPound = "EGP";
-		public const string EthiopianBirr = "ETB";
-		public const string Euro = "EUR";
-		public const string FijianDollar = "FJD";
-		public const string FalklandIslandsPound = "FKP";
-		public const string BritishPound = "GBP";
-		public const string GeorgianLari = "GEL";
-		public const string GibraltarPound = "GIP";
-		public const string GambianDalasi = "GMD";
-		public const string GuineanFranc = "GNF";
-		public const string GuatemalanQuetzal = "GTQ";
-		public const string GuyaneseDollar = "GYD";
-		public const string HongKongDollar = "HKD";
-		public const string HonduranLempira = "HNL";
-		public const string CroatianKuna = "HRK";
-		public const string HaitianGourde = "HTG";
-		public const string HungarianForint = "HUF";
-		public const string IndonesianRupiah = "IDR";
-		public const string IsraeliNewSheqel = "ILS";
-		public const string IndianRupee = "INR";
-		public const string IcelandicKróna = "ISK";
-		public const string JamaicanDollar = "JMD";
-		public const string JapaneseYen = "JPY";
-		public const string KenyanShilling = "KES";
-		public const string KyrgyzstaniSom = "KGS";
-		public const string CambodianRiel = "KHR";
-		public const string ComorianFranc = "KMF";
-		public const string SouthKoreanWon = "KRW";
-		public const string CaymanIslandsDollar = "KYD";
-		public const string KazakhstaniTenge = "KZT";
-		public const string LaoKip = "LAK";
-		public const string LebanesePound = "LBP";
-		public const string SriLankanRupee = "LKR";
-		public const string LiberianDollar = "LRD";
-		public const string LesothoLoti = "LSL";
-		public const string LithuanianLitas = "LTL";
-		public const string LatvianLats = "LVL";
-		public const string MoroccanDirham = "MAD";
-		public const string MoldovanLeu = "MDL";
-		public const string MalagasyAriary = "MGA";
-		public const string MacedonianDenar = "MKD";
-		public const string MongolianTögrög = "MNT";
-		public const string MacanesePataca = "MOP";
-		public const string MauritanianOuguiya = "MRO";
-		public const string MauritianRupee = "MUR";
-		public const string MaldivianRufiyaa = "MVR";
-		public const string MalawianKwacha = "MWK";
-		public const string MexicanPeso = "MXN";
-		public const string MalaysianRinggit = "MYR";
-		public const string MozambicanMetical = "MZN";
-		public const string NamibianDollar = "NAD";
-		public const string NigerianNaira = "NGN";
-		public const string NicaraguanCórdoba = "NIO";
-		public const string NorwegianKrone = "NOK";
-		public const string NepaleseRupee = "NPR";
-		public const string NewZealandDollar = "NZD";
-		public const string PanamanianBalboa = "PAB";
-		public const string PeruvianNuevoSol = "PEN";
-		public const string PapuaNewGuineanKina = "PGK";
-		public const string PhilippinePeso = "PHP";
-		public const string PakistaniRupee = "PKR";
-		public const string PolishZłoty = "PLN";
-		public const string ParaguayanGuaraní = "PYG";
-		public const string QatariRiyal = "QAR";
-		public const string RomanianLeu = "RON";
-		public const string SerbianDinar = "RSD";
-		public const string RussianRuble = "RUB";
-		public const string RwandanFranc = "RWF";
-		public const string SaudiRiyal = "SAR";
-		public const string SolomonIslandsDollar = "SBD";
-		public const string SeychelloisRupee = "SCR";
-		public const string SwedishKrona = "SEK";
-		public const string SingaporeDollar = "SGD";
-		public const string SaintHelenianPound = "SHP";
-		public const string SierraLeoneanLeone = "SLL";
-		public const string SomaliShilling = "SOS";
-		public const string SurinameseDollar = "SRD";
-		public const string SãoToméandPríncipeDobra = "STD";
-		public const string SalvadoranColón = "SVC";
-		public const string SwaziLilangeni = "SZL";
-		public const string ThaiBaht = "THB";
-		public const string TajikistaniSomoni = "TJS";
-		public const string TonganPaʻanga = "TOP";
-		public const string TurkishLira = "TRY";
-		public const string TrinidadandTobagoDollar = "TTD";
-		public const string NewTaiwanDollar = "TWD";
-		public const string TanzanianShilling = "TZS";
-		public const string UkrainianHryvnia = "UAH";
-		public const string UgandanShilling = "UGX";
-		public const string UnitedStatesDollar = "USD";
-		public const string UruguayanPeso = "UYU";
-		public const string UzbekistaniSom = "UZS";
-		public const string VenezuelanBolívar = "VEF";
-		public const string VietnameseĐồng = "VND";
-		public const string VanuatuVatu = "VUV";
-		public const string SamoanTala = "WST";
-		public const string CentralAfricanCfaFranc = "XAF";
-		public const string EastCaribbeanDollar = "XCD";
-		public const string WestAfricanCfaFranc = "XOF";
-		public const string CfpFranc = "XPF";
-		public const string YemeniRial = "YER";
-		public const string SouthAfricanRand = "ZAR";
-	}
+
+    public static class Currencies
+    {
+        public const string UnitedArabEmiratesDirham = "AED";
+        public const string AfghanAfghani = "AFN";
+        public const string AlbanianLek = "ALL";
+        public const string ArmenianDram = "AMD";
+        public const string NetherlandsAntilleanGulden = "ANG";
+        public const string AngolanKwanza = "AOA";
+        public const string ArgentinePeso = "ARS";
+        public const string AustralianDollar = "AUD";
+        public const string ArubanFlorin = "AWG";
+        public const string AzerbaijaniManat = "AZN";
+        public const string BosniaAndHerzegovinaConvertibleMark = "BAM";
+        public const string BarbadianDollar = "BBD";
+        public const string BangladeshiTaka = "BDT";
+        public const string BulgarianLev = "BGN";
+        public const string BurundianFran = "BIF";
+        public const string BermudianDollar = "BMD";
+        public const string BruneiDollar = "BND";
+        public const string BolivianBoliviano = "BOB";
+        public const string BrazilianReal = "BRL";
+        public const string BahamianDollar = "BSD";
+        public const string BotswanaPula = "BWP";
+        public const string BelizeDollar = "BZD";
+        public const string CanadianDollar = "CAD";
+        public const string CongoleseFranc = "CDF";
+        public const string SwissFranc = "CHF";
+        public const string ChileanPeso = "CLP";
+        public const string ChineseRenminbiYuan = "CNY";
+        public const string ColombianPeso = "COP";
+        public const string CostaRicanColón = "CRC";
+        public const string CapeVerdeanEscudo = "CVE";
+        public const string CzechKoruna = "CZK";
+        public const string DjiboutianFranc = "DJF";
+        public const string DanishKrone = "DKK";
+        public const string DominicanPeso = "DOP";
+        public const string AlgerianDinar = "DZD";
+        public const string EstonianKroon = "EEK";
+        public const string EgyptianPound = "EGP";
+        public const string EthiopianBirr = "ETB";
+        public const string Euro = "EUR";
+        public const string FijianDollar = "FJD";
+        public const string FalklandIslandsPound = "FKP";
+        public const string BritishPound = "GBP";
+        public const string GeorgianLari = "GEL";
+        public const string GibraltarPound = "GIP";
+        public const string GambianDalasi = "GMD";
+        public const string GuineanFranc = "GNF";
+        public const string GuatemalanQuetzal = "GTQ";
+        public const string GuyaneseDollar = "GYD";
+        public const string HongKongDollar = "HKD";
+        public const string HonduranLempira = "HNL";
+        public const string CroatianKuna = "HRK";
+        public const string HaitianGourde = "HTG";
+        public const string HungarianForint = "HUF";
+        public const string IndonesianRupiah = "IDR";
+        public const string IsraeliNewSheqel = "ILS";
+        public const string IndianRupee = "INR";
+        public const string IcelandicKróna = "ISK";
+        public const string JamaicanDollar = "JMD";
+        public const string JapaneseYen = "JPY";
+        public const string KenyanShilling = "KES";
+        public const string KyrgyzstaniSom = "KGS";
+        public const string CambodianRiel = "KHR";
+        public const string ComorianFranc = "KMF";
+        public const string SouthKoreanWon = "KRW";
+        public const string CaymanIslandsDollar = "KYD";
+        public const string KazakhstaniTenge = "KZT";
+        public const string LaoKip = "LAK";
+        public const string LebanesePound = "LBP";
+        public const string SriLankanRupee = "LKR";
+        public const string LiberianDollar = "LRD";
+        public const string LesothoLoti = "LSL";
+        public const string LithuanianLitas = "LTL";
+        public const string LatvianLats = "LVL";
+        public const string MoroccanDirham = "MAD";
+        public const string MoldovanLeu = "MDL";
+        public const string MalagasyAriary = "MGA";
+        public const string MacedonianDenar = "MKD";
+        public const string MongolianTögrög = "MNT";
+        public const string MacanesePataca = "MOP";
+        public const string MauritanianOuguiya = "MRO";
+        public const string MauritianRupee = "MUR";
+        public const string MaldivianRufiyaa = "MVR";
+        public const string MalawianKwacha = "MWK";
+        public const string MexicanPeso = "MXN";
+        public const string MalaysianRinggit = "MYR";
+        public const string MozambicanMetical = "MZN";
+        public const string NamibianDollar = "NAD";
+        public const string NigerianNaira = "NGN";
+        public const string NicaraguanCórdoba = "NIO";
+        public const string NorwegianKrone = "NOK";
+        public const string NepaleseRupee = "NPR";
+        public const string NewZealandDollar = "NZD";
+        public const string PanamanianBalboa = "PAB";
+        public const string PeruvianNuevoSol = "PEN";
+        public const string PapuaNewGuineanKina = "PGK";
+        public const string PhilippinePeso = "PHP";
+        public const string PakistaniRupee = "PKR";
+        public const string PolishZłoty = "PLN";
+        public const string ParaguayanGuaraní = "PYG";
+        public const string QatariRiyal = "QAR";
+        public const string RomanianLeu = "RON";
+        public const string SerbianDinar = "RSD";
+        public const string RussianRuble = "RUB";
+        public const string RwandanFranc = "RWF";
+        public const string SaudiRiyal = "SAR";
+        public const string SolomonIslandsDollar = "SBD";
+        public const string SeychelloisRupee = "SCR";
+        public const string SwedishKrona = "SEK";
+        public const string SingaporeDollar = "SGD";
+        public const string SaintHelenianPound = "SHP";
+        public const string SierraLeoneanLeone = "SLL";
+        public const string SomaliShilling = "SOS";
+        public const string SurinameseDollar = "SRD";
+        public const string SãoToméandPríncipeDobra = "STD";
+        public const string SalvadoranColón = "SVC";
+        public const string SwaziLilangeni = "SZL";
+        public const string ThaiBaht = "THB";
+        public const string TajikistaniSomoni = "TJS";
+        public const string TonganPaʻanga = "TOP";
+        public const string TurkishLira = "TRY";
+        public const string TrinidadandTobagoDollar = "TTD";
+        public const string NewTaiwanDollar = "TWD";
+        public const string TanzanianShilling = "TZS";
+        public const string UkrainianHryvnia = "UAH";
+        public const string UgandanShilling = "UGX";
+        public const string UnitedStatesDollar = "USD";
+        public const string UruguayanPeso = "UYU";
+        public const string UzbekistaniSom = "UZS";
+        public const string VenezuelanBolívar = "VEF";
+        public const string VietnameseĐồng = "VND";
+        public const string VanuatuVatu = "VUV";
+        public const string SamoanTala = "WST";
+        public const string CentralAfricanCfaFranc = "XAF";
+        public const string EastCaribbeanDollar = "XCD";
+        public const string WestAfricanCfaFranc = "XOF";
+        public const string CfpFranc = "XPF";
+        public const string YemeniRial = "YER";
+        public const string SouthAfricanRand = "ZAR";
+    }
 }

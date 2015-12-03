@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
+using ServiceStack.DataAnnotations;
 
 namespace ServiceStack.Stripe
 {
@@ -62,6 +63,13 @@ namespace ServiceStack.Stripe
     [Route("/charges")]
     public class GetStripeCharges : IGet, IReturn<StripeCollection<StripeCharge>>
     {
+        public GetStripeCharges()
+        {
+            Include = new string[] { "total_count" };
+        }
+
+        public string[] Include { get; set; }
+
         public int? Limit { get; set; }
         public string StartingAfter { get; set; }
         public string EndingBefore { get; set; }
@@ -113,7 +121,7 @@ namespace ServiceStack.Stripe
         public int AccountBalance { get; set; }
         public StripeCard Card { get; set; }
         public string Coupon { get; set; }
-        public string DefaultCard { get; set; }
+        public string DefaultSource { get; set; }
         public string Description { get; set; }
         public string Email { get; set; }
         public string Source { get; set; }
@@ -128,6 +136,13 @@ namespace ServiceStack.Stripe
     [Route("/customers")]
     public class GetStripeCustomers : IGet, IReturn<StripeCollection<StripeCustomer>>
     {
+        public GetStripeCustomers()
+        {
+            Include = new string[] { "total_count" };
+        }
+
+        public string[] Include { get; set; }
+
         public int? Limit { get; set; }
         public string StartingAfter { get; set; }
         public string EndingBefore { get; set; }
@@ -180,9 +195,16 @@ namespace ServiceStack.Stripe
         public string CardId { get; set; }
     }
 
-    [Route("/customers/{CustomerId}/sources?object=card&include[]=total_count")]
+    [Route("/customers/{CustomerId}/sources")]
     public class GetStripeCustomerCards : IGet, IReturn<StripeCollection<StripeCard>>
     {
+        public GetStripeCustomerCards()
+        {
+            Include = new string[] { "total_count" };
+        }
+
+        public string[] Include { get; set; }
+
         public string CustomerId { get; set; }
 
         public int? Limit { get; set; }
@@ -299,8 +321,9 @@ namespace ServiceStack.Stripe
     [Route("/coupons")]
     public class GetStripeCoupons : IGet, IReturn<StripeCollection<StripeCoupon>>
     {
-        public int? Count { get; set; }
-        public int? Offset { get; set; }
+        public int? Limit { get; set; }
+        public string StartingAfter { get; set; }
+        public string EndingBefore { get; set; }
     }
 
     /* Discounts
@@ -433,6 +456,7 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
+                url = url.Replace("?include=", "?include[]=");
 
                 var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req =>
                 {
@@ -464,6 +488,7 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
+                url = url.Replace("?include=", "?include[]=");
 
                 var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req =>
                 {
@@ -709,6 +734,7 @@ namespace ServiceStack.Stripe.Types
     {
         public string Url { get; set; }
         public int TotalCount { get; set; }
+        public bool? HasMore { get; set; }
         public List<T> Data { get; set; }
     }
 
@@ -791,7 +817,7 @@ namespace ServiceStack.Stripe.Types
         public StripeCollection<StripeCard> Sources { get; set; }
 
         public bool Deleted { get; set; }
-        public string DefaultCard { get; set; }
+        public string DefaultSource { get; set; }
     }
 
     public class GetAllStripeCustomers
@@ -811,9 +837,10 @@ namespace ServiceStack.Stripe.Types
 
     public class StripeCard : StripeId
     {
-        public string DynamicLast4 { get; set; }
-        public string Type { get; set; }
+        public string Brand { get; set; }
         public string Number { get; set; }
+        public string Last4 { get; set; }
+        public string DynamicLast4 { get; set; }
         public int ExpMonth { get; set; }
         public int ExpYear { get; set; }
         public string Cvc { get; set; }
@@ -828,6 +855,8 @@ namespace ServiceStack.Stripe.Types
         public StripeCvcCheck? CvcCheck { get; set; }
         public string AddressLine1Check { get; set; }
         public string AddressZipCheck { get; set; }
+
+        public string Funding { get; set; }
 
         public string Fingerprint { get; set; }
         public string Customer { get; set; }
@@ -873,12 +902,12 @@ namespace ServiceStack.Stripe.Types
         public bool LiveMode { get; set; }
         public int Amount { get; set; }
         public bool Captured { get; set; }
-        public StripeCard Card { get; set; }
+        public StripeCard Source { get; set; }
         public DateTime Created { get; set; }
         public string Currency { get; set; }
         public bool Paid { get; set; }
         public bool Refunded { get; set; }
-        public List<StripeRefund> Refunds { get; set; }
+        public StripeCollection<StripeRefund> Refunds { get; set; }
         public int AmountRefunded { get; set; }
         public string BalanceTransaction { get; set; }
         public string Customer { get; set; }
@@ -916,9 +945,13 @@ namespace ServiceStack.Stripe.Types
     public class StripeRefund : StripeObject
     {
         public int Amount { get; set; }
+        public string Charge { get; set; }
         public DateTime Created { get; set; }
         public string Currency { get; set; }
         public string BalanceTransaction { get; set; }
+        public string Description { get; set; }
+        public string Reason { get; set; }
+        public string ReceiptNumber { get; set; }
     }
 
     public class StripeDispute : StripeObject

@@ -155,7 +155,7 @@ namespace Stripe.Tests
 
             customers.PrintDump();
 
-            Assert.That(customers.TotalCount, Is.GreaterThan(0));
+            Assert.That(customers.Data.Count, Is.GreaterThan(0));
             Assert.That(customers.Data[0].Id, Is.Not.Null);
         }
 

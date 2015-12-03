@@ -35,7 +35,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -90,7 +90,7 @@ namespace Stripe.Tests
         {
             var customer = await CreateCustomerAsync();
             var idempotencyKey = Guid.NewGuid();
-            
+
             var chargeInput = new ChargeStripeCustomer
             {
                 Amount = 100,
@@ -106,7 +106,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
 
             var charge2 = gateway.Post(chargeInput, idempotencyKey.ToString());
@@ -114,14 +114,14 @@ namespace Stripe.Tests
             Assert.That(charge2.Id, Is.EqualTo(charge.Id)); //with idempotency key should not create additional charge
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
         [Test]
         public async Task Can_Charge_Customer_without_idempotency_key()
         {
-            var customer = await CreateCustomerAsync();            
+            var customer = await CreateCustomerAsync();
 
             var chargeInput = new ChargeStripeCustomer
             {
@@ -138,7 +138,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
 
             var charge2 = gateway.Post(chargeInput);
@@ -146,7 +146,7 @@ namespace Stripe.Tests
             Assert.That(charge2.Id, Is.Not.EqualTo(charge.Id)); //without idempotency key should create additional charge
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -169,7 +169,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
         }
 
@@ -215,7 +215,7 @@ namespace Stripe.Tests
             Assert.That(charge.Id, Is.Not.Null);
             Assert.That(charge.Customer, Is.EqualTo(customer.Id));
             Assert.That(charge.Amount, Is.EqualTo(100));
-            Assert.That(charge.Card.DynamicLast4, Is.EqualTo("4242"));
+            Assert.That(charge.Source.Last4, Is.EqualTo("4242"));
             Assert.That(charge.Paid, Is.True);
 
             var refundCharge = await gateway.PostAsync(new RefundStripeCharge
@@ -230,8 +230,8 @@ namespace Stripe.Tests
             Assert.That(refundCharge.Amount, Is.EqualTo(100));
             Assert.That(refundCharge.Paid, Is.True);
             Assert.That(refundCharge.Refunded, Is.True);
-            Assert.That(refundCharge.Refunds.Count, Is.EqualTo(1));
-            Assert.That(refundCharge.Refunds[0].Amount, Is.EqualTo(100));
+            Assert.That(refundCharge.Refunds.TotalCount, Is.EqualTo(1));
+            Assert.That(refundCharge.Refunds.Data[0].Amount, Is.EqualTo(100));
         }
 
         [Test]

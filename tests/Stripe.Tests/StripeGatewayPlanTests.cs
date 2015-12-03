@@ -62,7 +62,6 @@ namespace Stripe.Tests
 
             var plans = gateway.Get(new GetStripePlans { Limit = 20 });
 
-            Assert.That(plans.TotalCount, Is.GreaterThan(0));
             Assert.That(plans.Data.Count, Is.GreaterThan(0));
             Assert.That(plans.Data[0].Id, Is.Not.Null);
         }

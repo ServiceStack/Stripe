@@ -69,7 +69,7 @@ namespace Stripe.Tests
             });
 
             Assert.That(card.Name, Is.EqualTo("Test Card 2"));
-            Assert.That(card.DynamicLast4, Is.EqualTo("4444"));
+            Assert.That(card.Last4, Is.EqualTo("4444"));
 
             card = gateway.Get(new GetStripeCard
             {
@@ -80,7 +80,7 @@ namespace Stripe.Tests
             card.PrintDump();
 
             Assert.That(card.Name, Is.EqualTo("Test Card 2"));
-            Assert.That(card.DynamicLast4, Is.EqualTo("4444"));
+            Assert.That(card.Last4, Is.EqualTo("4444"));
         }
 
         [Test]

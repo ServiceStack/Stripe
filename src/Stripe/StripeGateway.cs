@@ -8,7 +8,6 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
-using ServiceStack.DataAnnotations;
 
 namespace ServiceStack.Stripe
 {

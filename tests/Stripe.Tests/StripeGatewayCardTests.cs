@@ -17,7 +17,7 @@ namespace Stripe.Tests
         {
             var customer = CreateCustomer();
 
-            Assert.That(customer.Cards.Count, Is.EqualTo(1));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
 
             var card = gateway.Post(new CreateStripeCard
             {
@@ -43,7 +43,7 @@ namespace Stripe.Tests
 
             customer = gateway.Get(new GetStripeCustomer { Id = customer.Id });
 
-            Assert.That(customer.Cards.Count, Is.EqualTo(2));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(2));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Stripe.Tests
             var card = gateway.Post(new UpdateStripeCard
             {
                 CustomerId = customer.Id,
-                CardId = customer.Cards.Data[0].Id,
+                CardId = customer.Sources.Data[0].Id,
 
                 Name = "Test Card Updated",
 
@@ -113,20 +113,20 @@ namespace Stripe.Tests
         {
             var customer = CreateCustomer();
 
-            Assert.That(customer.Cards.Count, Is.EqualTo(1));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
 
-            var deletedRef = gateway.Delete(new DeleteStripeCard
+            var deletedRef = gateway.Delete(new DeleteStripeCustomerCard
             {
                 CustomerId = customer.Id,
-                CardId = customer.Cards.Data[0].Id,
+                CardId = customer.Sources.Data[0].Id,
             });
 
-            Assert.That(deletedRef.Id, Is.EqualTo(customer.Cards.Data[0].Id));
+            Assert.That(deletedRef.Id, Is.EqualTo(customer.Sources.Data[0].Id));
             Assert.That(deletedRef.Deleted, Is.True);
 
             customer = gateway.Get(new GetStripeCustomer { Id = customer.Id });
 
-            Assert.That(customer.Cards.Count, Is.EqualTo(0));
+            Assert.That(customer.Sources.TotalCount, Is.EqualTo(0));
         }
 
         [Test]
@@ -151,9 +151,10 @@ namespace Stripe.Tests
                 },
             });
 
-            var cards = gateway.Get(new GetStripeCards { CustomerId = customer.Id });
+            var cards = gateway.Get(new GetStripeCustomerCards { CustomerId = customer.Id });
 
-            Assert.That(cards.Count, Is.EqualTo(2));
+            Assert.That(cards.Data.Count, Is.EqualTo(2));
+            Assert.That(cards.TotalCount, Is.EqualTo(2));
         }
     }
 }

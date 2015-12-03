@@ -84,7 +84,7 @@ namespace Stripe.Tests
             Assert.That(upcomingInvoice.Closed, Is.False);
             Assert.That(upcomingInvoice.Paid, Is.False);
             Assert.That(upcomingInvoice.Customer, Is.EqualTo(customer.Id));
-            Assert.That(upcomingInvoice.Lines.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(upcomingInvoice.Lines.TotalCount, Is.GreaterThanOrEqualTo(1));
         }
     }
 }

@@ -397,6 +397,8 @@ namespace ServiceStack.Stripe
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
                 req.Headers["Idempotency-Key"] = idempotencyKey;
 
+            req.Headers["Stripe-Version"] = "2014-03-13";
+
             PclExport.Instance.Config(req,
                 userAgent: UserAgent,
                 timeout: Timeout,

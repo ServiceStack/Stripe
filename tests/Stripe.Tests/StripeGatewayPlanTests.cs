@@ -48,7 +48,7 @@ namespace Stripe.Tests
         [Test]
         public void Can_Delete_All_Plans()
         {
-            var plans = gateway.Get(new GetStripePlans { Count = 100 });
+            var plans = gateway.Get(new GetStripePlans { Limit = 100 });
             foreach (var plan in plans.Data)
             {
                 gateway.Delete(new DeleteStripePlan { Id = plan.Id });
@@ -60,9 +60,8 @@ namespace Stripe.Tests
         {
             var plan = GetOrCreatePlan();
 
-            var plans = gateway.Get(new GetStripePlans { Count = 20 });
+            var plans = gateway.Get(new GetStripePlans { Limit = 20 });
 
-            Assert.That(plans.Count, Is.GreaterThan(0));
             Assert.That(plans.Data.Count, Is.GreaterThan(0));
             Assert.That(plans.Data[0].Id, Is.Not.Null);
         }

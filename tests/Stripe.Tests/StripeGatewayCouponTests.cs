@@ -25,7 +25,7 @@ namespace Stripe.Tests
         [Test]
         public void Can_Get_Coupon()
         {
-            var coupon = GetOrCreateCoupon();   
+            var coupon = GetOrCreateCoupon();
 
             coupon = gateway.Get(new GetStripeCoupon { Id = coupon.Id });
 
@@ -35,7 +35,7 @@ namespace Stripe.Tests
         [Test]
         public void Can_Delete_All_Coupons()
         {
-            var plans = gateway.Get(new GetStripeCoupons { Count = 100 });
+            var plans = gateway.Get(new GetStripeCoupons { Limit = 100 });
             foreach (var plan in plans.Data)
             {
                 gateway.Delete(new DeleteStripeCoupon { Id = plan.Id });
@@ -47,9 +47,8 @@ namespace Stripe.Tests
         {
             var coupon = GetOrCreateCoupon();
 
-            var coupons = gateway.Get(new GetStripeCoupons { Count = 20 });
+            var coupons = gateway.Get(new GetStripeCoupons { Limit = 20 });
 
-            Assert.That(coupons.Count, Is.GreaterThan(0));
             Assert.That(coupons.Data.Count, Is.GreaterThan(0));
             Assert.That(coupons.Data[0].Id, Is.Not.Null);
         }

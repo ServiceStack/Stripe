@@ -10,14 +10,7 @@ namespace Stripe.Tests
 {
     public class TestsBase
     {
-        const string LicenseTextPath = @"C:\src\appsettings.license.txt";
         protected readonly StripeGateway gateway = new StripeGateway("sk_test_23KlmQohLKD4dfmAvxYESZ2z");
-
-        public TestsBase()
-        {
-            if (File.Exists(LicenseTextPath))
-                Licensing.RegisterLicenseFromFile(LicenseTextPath);
-        }
 
         protected StripeCustomer CreateCustomer()
         {

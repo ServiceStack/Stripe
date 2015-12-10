@@ -60,14 +60,12 @@ namespace ServiceStack.Stripe
     }
 
     [Route("/charges")]
-    public class GetStripeCharges : IGet, IReturn<StripeCollection<StripeCharge>>
+    public class GetStripeCharges : IGet, IReturn<StripeCollection<StripeCharge>>, IUrlFilter
     {
         public GetStripeCharges()
         {
-            Include = new string[] { "total_count" };
+            Include = new[] { "total_count" };
         }
-
-        public string[] Include { get; set; }
 
         public int? Limit { get; set; }
         public string StartingAfter { get; set; }
@@ -75,6 +73,14 @@ namespace ServiceStack.Stripe
 
         public DateTime? Created { get; set; }
         public string Customer { get; set; }
+
+        [IgnoreDataMember]
+        public string[] Include { get; set; }
+
+        public string ToUrl(string absoluteUrl)
+        {
+            return absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+        }
     }
 
     /* Customers 
@@ -133,20 +139,26 @@ namespace ServiceStack.Stripe
     }
 
     [Route("/customers")]
-    public class GetStripeCustomers : IGet, IReturn<StripeCollection<StripeCustomer>>
+    public class GetStripeCustomers : IGet, IReturn<StripeCollection<StripeCustomer>>, IUrlFilter
     {
         public GetStripeCustomers()
         {
-            Include = new string[] { "total_count" };
+            Include = new[] { "total_count" };
         }
-
-        public string[] Include { get; set; }
 
         public int? Limit { get; set; }
         public string StartingAfter { get; set; }
         public string EndingBefore { get; set; }
 
         public DateTime? Created { get; set; }
+
+        [IgnoreDataMember]
+        public string[] Include { get; set; }
+
+        public string ToUrl(string absoluteUrl)
+        {
+            return absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+        }
     }
 
     /* Cards
@@ -195,14 +207,12 @@ namespace ServiceStack.Stripe
     }
 
     [Route("/customers/{CustomerId}/sources")]
-    public class GetStripeCustomerCards : IGet, IReturn<StripeCollection<StripeCard>>
+    public class GetStripeCustomerCards : IGet, IReturn<StripeCollection<StripeCard>>, IUrlFilter
     {
         public GetStripeCustomerCards()
         {
-            Include = new string[] { "total_count" };
+            Include = new[] { "total_count" };
         }
-
-        public string[] Include { get; set; }
 
         public string CustomerId { get; set; }
 
@@ -210,6 +220,13 @@ namespace ServiceStack.Stripe
         public string StartingAfter { get; set; }
         public string EndingBefore { get; set; }
 
+        [IgnoreDataMember]
+        public string[] Include { get; set; }
+
+        public string ToUrl(string absoluteUrl)
+        {
+            return absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+        }
     }
 
     /* Subscriptions
@@ -456,8 +473,6 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
-                url = url.Replace("?include=", "?include[]=");
-
                 var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req =>
                 {
                     InitRequest(req, method, idempotencyKey);
@@ -488,8 +503,6 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
-                url = url.Replace("?include=", "?include[]=");
-
                 var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req =>
                 {
                     InitRequest(req, method, idempotencyKey);

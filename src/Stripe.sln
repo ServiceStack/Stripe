@@ -16,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8336FEA3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stripe", "Stripe\Stripe.csproj", "{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stripe.Pcl", "Stripe.Pcl\Stripe.Pcl.csproj", "{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,14 +40,6 @@ Global
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Signed|Any CPU.ActiveCfg = Release|Any CPU
 		{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}.Signed|Any CPU.Build.0 = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.MonoTouch|Any CPU.ActiveCfg = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.MonoTouch|Any CPU.Build.0 = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Signed|Any CPU.ActiveCfg = Release|Any CPU
-		{6AE268CA-FCC2-48CD-BB3A-91C44EBA07D4}.Signed|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

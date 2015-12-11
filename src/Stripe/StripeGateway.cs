@@ -79,7 +79,7 @@ namespace ServiceStack.Stripe
 
         public string ToUrl(string absoluteUrl)
         {
-            return absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+            return Include == null ? absoluteUrl : absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
         }
     }
 
@@ -157,7 +157,7 @@ namespace ServiceStack.Stripe
 
         public string ToUrl(string absoluteUrl)
         {
-            return absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+            return Include == null ? absoluteUrl : absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
         }
     }
 
@@ -225,7 +225,7 @@ namespace ServiceStack.Stripe
 
         public string ToUrl(string absoluteUrl)
         {
-            return absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+            return Include == null ? absoluteUrl : absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
         }
     }
 

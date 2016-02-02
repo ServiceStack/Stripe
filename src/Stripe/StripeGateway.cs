@@ -408,6 +408,135 @@ namespace ServiceStack.Stripe
         public StripeCard Card { get; set; }
     }
 
+    /* 
+        Accounts 
+    */
+    [Route("/accounts")]
+    public class CreateStripeAccount : IPost, IReturn<CreateStripeAccountResponse>
+    {
+        public string Country { get; set; }
+        public bool Managed { get; set; }
+        public string Email { get; set; }
+        public StripeTosAcceptance TosAcceptance { get; set; }
+        public StripeLegalEntity LegalEntity { get; set; }
+    }
+
+    public class CreateStripeAccountResponse : StripeAccount
+    {
+        public Dictionary<string, string> Keys { get; set; }
+    }
+
+    public class StripeTosAcceptance
+    {
+        public DateTime Date { get; set; }
+        public string Ip { get; set; }
+        public string UserAgent { get; set; }
+    }
+
+    public class StripeLegalEntity
+    {
+        public StripeOwner[] AdditionalOwners { get; set; }
+        public StripeAddress Address { get; set; }
+        public string BusinessName { get; set; }
+        public bool BusinessTaxIdProvided { get; set; }
+        public StripeDate Dob { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public StripeAddress PersonalAddress { get; set; }
+        public bool PersonalIdNumberProvided { get; set; }
+        public bool SsnLast4Provided { get; set; }
+        public string Type { get; set; }
+        public StripeVerificationBusiness Verification { get; set; }
+    }
+
+    public class StripeAccount : StripeId
+    {
+        public string BusinessName { get; set; }
+        public string BusinessPrimaryColor { get; set; }
+        public string BusinessUrl { get; set; }
+        public bool ChargesEnabled { get; set; }
+        public string Country { get; set; }
+        public string[] CurrenciesSupported { get; set; }
+        public bool DebitNegativeBalances { get; set; }
+        public StripeDeclineCharge DeclineChargeOn { get; set; }
+        public string DefaultCurrency { get; set; }
+        public bool DetailsSubmitted { get; set; }
+        public string DisplayName { get; set; }
+        public string Email { get; set; }
+        public StripeLegalEntity LegalEntity { get; set; }
+        public bool Managed { get; set; }
+        public string ProductDescription { get; set; }
+        public string StatementDescriptor { get; set; }
+        public string SupportEmail { get; set; }
+        public string SupportPhone { get; set; }
+        public string SupportUrl { get; set; }
+        public string Timezone { get; set; }
+        public StripeTosAcceptance TosAcceptance { get; set; }
+    }
+
+    public class StripeDeclineCharge
+    {
+        public bool AvsFailure { get; set; }
+        public bool CvcFailure { get; set; }
+    }
+
+    public class StripeOwner
+    {
+        public StripeAddress Address { get; set; }
+        public StripeDate Dob { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
+    public class StripeAddress
+    {
+        public string City { get; set; }
+        public string Country { get; set; }
+        public string Line1 { get; set; }
+        public string Line2 { get; set; }
+        public string PostalCode { get; set; }
+        public string State { get; set; }
+    }
+
+    public class StripeDate
+    {
+        public StripeDate() { }
+        public StripeDate(int year, int month, int day)
+        {
+            Year = year;
+            Month = month;
+            Day = day;
+        }
+
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int Day { get; set; }
+    }
+
+    public class StripeVerificationBusiness
+    {
+        public string Details { get; set; }
+        public string DetailsCode { get; set; }
+        public string Document { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class StripeTransferSchedule
+    {
+        public int DelayDays { get; set; }
+        public string Interval { get; set; }
+        public int MonthlyAnchor { get; set; }
+        public string WeeklyAnchor { get; set; }
+        public bool TransfersEnabled { get; set; }
+    }
+
+    public class StripeVerificationAccount
+    {
+        public string DisabledReason { get; set; }
+        public DateTime DueBy { get; set; }
+        public string[] FieldsNeeded { get; set; }
+    }
+
 
     public class StripeGateway : IRestGateway
     {
@@ -520,7 +649,7 @@ namespace ServiceStack.Stripe
             }
         }
 
-        class ConfigScope : IDisposable
+        public class ConfigScope : IDisposable
         {
             private readonly WriteComplexTypeDelegate holdQsStrategy;
             private readonly JsConfigScope jsConfigScope;

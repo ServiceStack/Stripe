@@ -438,13 +438,13 @@ namespace ServiceStack.Stripe
         public StripeOwner[] AdditionalOwners { get; set; }
         public StripeAddress Address { get; set; }
         public string BusinessName { get; set; }
-        public bool BusinessTaxIdProvided { get; set; }
+        public bool? BusinessTaxIdProvided { get; set; }
         public StripeDate Dob { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public StripeAddress PersonalAddress { get; set; }
-        public bool PersonalIdNumberProvided { get; set; }
-        public bool SsnLast4Provided { get; set; }
+        public bool? PersonalIdNumberProvided { get; set; }
+        public bool? SsnLast4Provided { get; set; }
         public string Type { get; set; }
         public StripeVerificationBusiness Verification { get; set; }
     }

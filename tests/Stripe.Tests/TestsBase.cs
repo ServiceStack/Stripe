@@ -11,7 +11,7 @@ namespace Stripe.Tests
     public class TestsBase
     {
         //Register License Key in SERVICESTACK_LICENSE Environment Variable or in App.config
-        protected readonly StripeGateway gateway = new StripeGateway("sk_test_23KlmQohLKD4dfmAvxYESZ2z");
+        protected readonly StripeGateway gateway = new StripeGateway("sk_test_Q9XojyuQxzWqe8b2rm6Vodna");
 
         protected StripeCustomer CreateCustomer()
         {

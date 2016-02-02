@@ -9,6 +9,7 @@ using ServiceStack.Text;
 
 namespace Stripe.Tests
 {
+    [Ignore,Explicit("Requires OAuth")]
     [TestFixture]
     public class StripeGatewayAccountTests : TestsBase
     {

@@ -26,10 +26,10 @@ namespace Stripe.Tests
                         Country = "US",
                         PostalCode = "90210",
                     },
-                    Dob = new StripeDate(1980,1,1),
+                    Dob = new StripeDate(1980, 1, 1),
                     BusinessName = "Business Name",
                     FirstName = "First",
-                    LastName = "Last",                    
+                    LastName = "Last",
                 }
             });
 
@@ -57,6 +57,12 @@ namespace Stripe.Tests
             Assert.That(dob.Year, Is.EqualTo(1980));
             Assert.That(dob.Month, Is.EqualTo(1));
             Assert.That(dob.Day, Is.EqualTo(1));
+
+            var verification = response.Verification;
+            Assert.That(verification.DisabledReason, Is.EqualTo("fields_needed"));
+            Assert.That(verification.DueBy, Is.Null);
+            Assert.That(verification.FieldsNeeded, Is.Not.Null);
+            Assert.That(verification.FieldsNeeded.Length, Is.EqualTo(4));
         }
     }
 }

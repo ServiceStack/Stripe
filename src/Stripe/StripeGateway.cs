@@ -11,7 +11,7 @@ using ServiceStack.Text;
 
 namespace ServiceStack.Stripe
 {
-    /* Charges 
+    /* Charges
 	 * https://stripe.com/docs/api/curl#charges
 	 */
     [Route("/charges")]
@@ -83,7 +83,7 @@ namespace ServiceStack.Stripe
         }
     }
 
-    /* Customers 
+    /* Customers
 	 * https://stripe.com/docs/api/curl#customers
 	 */
     [Route("/customers")]
@@ -408,8 +408,8 @@ namespace ServiceStack.Stripe
         public StripeCard Card { get; set; }
     }
 
-    /* 
-        Accounts 
+    /*
+        Accounts
     */
     [Route("/accounts")]
     public class CreateStripeAccount : IPost, IReturn<CreateStripeAccountResponse>
@@ -472,6 +472,7 @@ namespace ServiceStack.Stripe
         public string SupportUrl { get; set; }
         public string Timezone { get; set; }
         public StripeTosAcceptance TosAcceptance { get; set; }
+        public StripeVerificationAccount Verification { get; set; }
     }
 
     public class StripeDeclineCharge
@@ -533,7 +534,7 @@ namespace ServiceStack.Stripe
     public class StripeVerificationAccount
     {
         public string DisabledReason { get; set; }
-        public DateTime DueBy { get; set; }
+        public DateTime? DueBy { get; set; }
         public string[] FieldsNeeded { get; set; }
     }
 

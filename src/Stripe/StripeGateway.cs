@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
@@ -376,12 +377,22 @@ namespace ServiceStack.Stripe
     }
 
     [Route("/invoices")]
-    public class GetStripeInvoices : IGet, IReturn<StripeCollection<StripeInvoice>>
+    public class GetStripeInvoices : IGet, IReturn<StripeCollection<StripeInvoice>>, IUrlFilter
     {
         public string Customer { get; set; }
         public DateTime? Date { get; set; }
         public int? Count { get; set; }
         public int? Offset { get; set; }
+
+        [IgnoreDataMember]
+        public StripeDateOptions DateOptions { get; set; }
+
+        public string ToUrl(string absoluteUrl)
+        {
+            return Date != null || DateOptions == null 
+                ? absoluteUrl 
+                : absoluteUrl.AppendOptions("date", DateOptions);
+        }
     }
 
     [Route("/invoices/upcoming")]
@@ -779,6 +790,42 @@ namespace ServiceStack.Stripe
             return SendAsync(request, HttpMethods.Delete, sendRequestBody: false);
         }
     }
+
+    public class StripeDateOptions
+    {
+        public DateTime? After { get; set; }
+        public DateTime? OnOrAfter { get; set; }
+        public DateTime? Before { get; set; }
+        public DateTime? OnOrBefore { get; set; }
+    }
+
+    internal static class UrlExtensions
+    {
+        public static string AppendOptions(this string url, string name, StripeDateOptions options)
+        {
+            var sb = new StringBuilder();
+            var map = new Dictionary<string, DateTime?>
+            {
+                { "gt", options.After },
+                { "gte", options.OnOrAfter },
+                { "lt", options.Before },
+                { "lte", options.OnOrBefore },
+            };
+
+            foreach (var entry in map)
+            {
+                if (entry.Value == null)
+                    continue;
+
+                url = url.AddQueryParam(
+                    "{0}[{1}]".Fmt(name, entry.Key),
+                    entry.Value.Value.ToUnixTime());
+            }
+
+            return url;
+        }
+    }
+
 }
 
 namespace ServiceStack.Stripe.Types

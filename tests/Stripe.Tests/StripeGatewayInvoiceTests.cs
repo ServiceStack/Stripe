@@ -2,7 +2,9 @@
 // License: https://raw.github.com/ServiceStack/ServiceStack/master/license.txt
 
 
+using System;
 using NUnit.Framework;
+using ServiceStack;
 using ServiceStack.Stripe;
 using ServiceStack.Text;
 
@@ -85,6 +87,21 @@ namespace Stripe.Tests
             Assert.That(upcomingInvoice.Paid, Is.False);
             Assert.That(upcomingInvoice.Customer, Is.EqualTo(customer.Id));
             Assert.That(upcomingInvoice.Lines.TotalCount, Is.GreaterThanOrEqualTo(1));
+        }
+
+        [Test]
+        public void Can_list_Invoices_before_date()
+        {
+            var response = gateway.Get(new GetStripeInvoices
+            {
+                Count = 5,
+                DateOptions = new StripeDateOptions
+                {
+                    OnOrBefore = DateTime.UtcNow
+                }
+            });
+
+            Assert.That(response.Data.Count, Is.EqualTo(5));
         }
     }
 }

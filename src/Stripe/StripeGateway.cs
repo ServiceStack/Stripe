@@ -732,12 +732,14 @@ namespace ServiceStack.Stripe
 
         public T Send<T>(IReturn<T> request)
         {
-            return Send(request, GetMethod(request), sendRequestBody: false);
+            var method = GetMethod(request);
+            return Send(request, method, sendRequestBody: method == HttpMethods.Post || method == HttpMethods.Put);
         }
 
         public Task<T> SendAsync<T>(IReturn<T> request)
         {
-            return SendAsync(request, GetMethod(request), sendRequestBody: false);
+            var method = GetMethod(request);
+            return SendAsync(request, method, sendRequestBody: method == HttpMethods.Post || method == HttpMethods.Put);
         }
 
         public T Get<T>(IReturn<T> request)

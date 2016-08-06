@@ -98,6 +98,8 @@ namespace ServiceStack.Stripe
         public string Plan { get; set; }
         public int? Quantity { get; set; }
         public DateTime? TrialEnd { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public string BusinessVatId { get; set; }
     }
 
     [Route("/customers")]
@@ -111,6 +113,8 @@ namespace ServiceStack.Stripe
         public string Plan { get; set; }
         public int? Quantity { get; set; }
         public DateTime? TrialEnd { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public string BusinessVatId { get; set; }
     }
 
     [Route("/customers/{Id}")]
@@ -131,6 +135,8 @@ namespace ServiceStack.Stripe
         public string Description { get; set; }
         public string Email { get; set; }
         public string Source { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public string BusinessVatId { get; set; }
     }
 
     [Route("/customers/{Id}")]
@@ -1010,6 +1016,8 @@ namespace ServiceStack.Stripe.Types
 
         public bool Deleted { get; set; }
         public string DefaultSource { get; set; }
+        public string Currency { get; set; }
+        public string BusinessVatId { get; set; }
     }
 
     public class GetAllStripeCustomers

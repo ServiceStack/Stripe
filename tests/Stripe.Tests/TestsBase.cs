@@ -25,7 +25,7 @@ namespace Stripe.Tests
             return customer;
         }
 
-        private static CreateStripeCustomer CreateStripeCustomerRequest()
+        protected static CreateStripeCustomer CreateStripeCustomerRequest()
         {
             return new CreateStripeCustomer
             {

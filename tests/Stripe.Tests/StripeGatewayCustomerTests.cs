@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using ServiceStack.Stripe;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
@@ -159,5 +160,20 @@ namespace Stripe.Tests
             Assert.That(customers.Data[0].Id, Is.Not.Null);
         }
 
+        [Test]
+        public void Can_Create_and_UpdateCustomer_with_Metadata()
+        {
+            var request = CreateStripeCustomerRequest();
+            request.BusinessVatId = "VatId";
+            request.Metadata = new Dictionary<string, string> {
+                {"order_id", "1234"}
+            };
+
+            var customer = gateway.Post(request);
+
+            Assert.That(customer.BusinessVatId, Is.EqualTo(request.BusinessVatId));
+            Assert.That(customer.Metadata["order_id"], Is.EqualTo(request.Metadata["order_id"]));
+            Assert.That(customer.Currency.ToUpper(), Is.EqualTo(Currencies.UnitedStatesDollar));
+        }
     }
 }

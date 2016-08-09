@@ -19,8 +19,6 @@ Install from NuGet with:
 
     PM> Install-Package ServiceStack.Stripe
 
-_* depends on [ServiceStack.Text commercial library](https://servicestack.net/text), ServiceStack v4 [free-quotas](https://servicestack.net/download#free-quotas) apply._
-
 Includes Portable Version (.NET 4.5, iOS, Android + Windows Store) 
 
 ## Download from MyGet

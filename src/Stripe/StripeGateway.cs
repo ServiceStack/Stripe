@@ -579,6 +579,9 @@ namespace ServiceStack.Stripe
             UserAgent = "servicestack .net stripe v1";
             Currency = Currencies.UnitedStatesDollar;
             JsConfig.InitStatics();
+
+            //https://support.stripe.com/questions/how-do-i-upgrade-my-stripe-integration-from-tls-1-0-to-tls-1-2#dotnet
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
         }
 
         protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)

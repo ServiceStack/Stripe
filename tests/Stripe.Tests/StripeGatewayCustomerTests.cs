@@ -166,13 +166,15 @@ namespace Stripe.Tests
             var request = CreateStripeCustomerRequest();
             request.BusinessVatId = "VatId";
             request.Metadata = new Dictionary<string, string> {
-                {"order_id", "1234"}
+                {"order_id", "1234"},
+                {"ref_id", "456"},
             };
 
             var customer = gateway.Post(request);
 
             Assert.That(customer.BusinessVatId, Is.EqualTo(request.BusinessVatId));
             Assert.That(customer.Metadata["order_id"], Is.EqualTo(request.Metadata["order_id"]));
+            Assert.That(customer.Metadata["ref_id"], Is.EqualTo(request.Metadata["ref_id"]));
             Assert.That(customer.Currency.ToUpper(), Is.EqualTo(Currencies.UnitedStatesDollar));
         }
     }

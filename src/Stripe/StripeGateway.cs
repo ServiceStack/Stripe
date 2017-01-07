@@ -179,6 +179,15 @@ namespace ServiceStack.Stripe
 
         public StripeCard Card { get; set; }
     }
+    
+    [Route("/customers/{CustomerId}/sources")]
+    public class CreateStripeCardWithToken : IPost, IReturn<StripeCard>
+    {
+        [IgnoreDataMember]
+        public string CustomerId { get; set; }
+
+        public string Source { get; set; }
+    }
 
     [Route("/customers/{CustomerId}/cards/{CardId}")]
     public class GetStripeCard : IGet, IReturn<StripeCard>

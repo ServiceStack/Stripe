@@ -19,20 +19,20 @@
   "dependencies": {
     "Microsoft.NETCore.App": {
       "type": "platform",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
-    "NETStandard.Library": "1.6.0",
-    "NUnitLite": "3.2.1",
+    "NETStandard.Library": "1.6.1",
+    "NUnitLite": "3.5.0",
     "Stripe" : "1.0.*",
     "ServiceStack.Interfaces" : "1.0.*",
     "ServiceStack.Text" : "1.0.*",
     "ServiceStack.Client" : "1.0.*"
   },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": "dnxcore50",
       "dependencies": {
-        "System.Reflection.TypeExtensions": "4.1.0"
+        "System.Reflection.TypeExtensions": "4.*"
       }
     }
   },

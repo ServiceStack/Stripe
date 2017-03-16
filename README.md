@@ -1,3 +1,6 @@
+Join the [ServiceStack Google+ Community](https://plus.google.com/communities/112445368900682590445) or follow [@ServiceStack](https://twitter.com/servicestack) 
+for updates, or [StackOverflow](http://stackoverflow.com/questions/ask) or the [Customer Support Forums](https://forums.servicestack.net/) for support.
+
 Stripe
 ======
 

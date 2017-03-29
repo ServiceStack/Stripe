@@ -4,5 +4,8 @@
   },
   "runtimes": {
     "win": {}
+  },
+  "dependencies": {
+    "NUnitLite": "3.6.1"
   }
 }

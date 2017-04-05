@@ -24,6 +24,12 @@ Install from NuGet with:
 
 Includes Portable Version (.NET 4.5, iOS, Android + Windows Store) 
 
+### .NET Core
+
+.NET Core version is also available from:
+
+    PM> Install-Package ServiceStack.Stripe.Core
+
 ## Usage
 
 Requires a [registered Stripe API Key](https://manage.stripe.com/register), e.g:

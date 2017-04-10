@@ -1,8 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.1;portable45-net45+win8</TargetFrameworks>
-    <!--<TargetFrameworks>portable45-net45+win8</TargetFrameworks>-->
+    <TargetFrameworks>net45;netstandard1.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(OS)' != 'Unix' ">
+    <TargetFrameworks>$(TargetFrameworks);portable45-net45+win8</TargetFrameworks>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <!-- <TargetFrameworks>net45;netstandard1.1;portable45-net45+win8</TargetFrameworks> -->
     <AssemblyName>Stripe</AssemblyName>
     <PackageId>Stripe</PackageId>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>

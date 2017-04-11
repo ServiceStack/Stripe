@@ -22,12 +22,10 @@
     <PackageCoreVersion>1.0.$(PatchCoreVersion)$(UnstableTag)</PackageCoreVersion>
   </PropertyGroup>
 
-
   <ItemGroup>
     <NugetPackageFilesToDelete Include="$(NuGetPackageDir)/*.nupkg"/>
     <NugetPackageFilesToDelete Include="$(NuGetPackageCoreDir)/*.nupkg"/>
   </ItemGroup>
-
 
   <PropertyGroup>
     <DoBuildSolutionsDependsOn>
@@ -44,11 +42,6 @@
 
   <Target Name="BeforeBuildSolutions">
     <Message Text="*****Before building solution*****" Importance="high"/>
-    <!--<Copy SourceFiles="Test/ci.app.config" DestinationFiles="Test/app.config" />-->
-  </Target>
-
-  <Target Name="UnitTests" DependsOnTargets="$(DoBuildSolutionsDependsOn)">
-      <Exec Command="$(BuildSolutionDir)/lib/tests/nunit-console/nunit-console-x86.exe $(BuildSolutionDir)/tests/Stripe.Tests/bin/$(Configuration)/Stripe.Tests.dll"/>
   </Target>
 
   <Target Name="BuildSolutions">

@@ -4,8 +4,8 @@
   <Import Project="$(MSBuildProjectDirectory)/build.tasks" />
 
   <PropertyGroup>
-    <MajorVersion Condition="$(MajorVersion) == ''">4</MajorVersion>
-    <MinorVersion Condition="$(MinorVersion) == ''">5</MinorVersion>
+    <MajorVersion Condition="$(MajorVersion) == ''">1</MajorVersion>
+    <MinorVersion Condition="$(MinorVersion) == ''">0</MinorVersion>
     <PatchVersion Condition="$(PatchVersion) == ''">$(BUILD_NUMBER)</PatchVersion>
   </PropertyGroup>
 
@@ -14,7 +14,7 @@
     <SrcDir>$(BuildSolutionDir)/src</SrcDir>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <NuGetPath>$(BuildSolutionDir)/src/.nuget/nuget.exe</NuGetPath>
-    <NuGetPackageDir>$(BuildSolutionDir)/NuGet/</NuGetPackageDir>
+    <NuGetPackageDir>$(BuildSolutionDir)/NuGet.Core/</NuGetPackageDir>
     <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</Version>
     <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</PackageVersion>
   </PropertyGroup>
@@ -54,7 +54,7 @@
       </RegexTransform>
       <!--Update Min Dependency Version -->
       <RegexTransform Include="$(NuGetPackageDir)/**/*.nuspec">
-        <Find>version="4\.5[^"]*"</Find>
+        <Find>version="1\.0\.[^"]*"</Find>
         <ReplaceWith>version="$(PackageVersion)"</ReplaceWith>
       </RegexTransform>
     </ItemGroup>
@@ -68,8 +68,7 @@
     <Delete Files="@(NugetPackageFilesToDelete)" />
 
     <ItemGroup>
-      <StripeFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/net45/Stripe.*"></StripeFiles>
-      <StripePclFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/portable45-net45+win8/Stripe.*"></StripePclFiles>
+      <StripeCoreFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/netstandard1.1/Stripe.*"></StripeCoreFiles>
     </ItemGroup>
 
     <!-- .NET 4.5 -->
@@ -77,14 +76,10 @@
              Targets="Build"
              Properties="Version=$(PackageVersion);Configuration=$(Configuration)" />
 
-    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45')" />
-    <Copy SourceFiles="%(StripeFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45" />
+    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard1.1" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard1.1')" />
+    <Copy SourceFiles="%(StripeCoreFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard1.1" />
 
-    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10')" />
-    <Copy SourceFiles="%(StripePclFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10" />
-
-    <Exec Command="&quot;$(NuGetPath)&quot; pack &quot;$(NuGetPackageDir)/ServiceStack.Stripe/servicestack.stripe.nuspec&quot; -OutputDirectory &quot;$(NuGetPackageDir)&quot; -Version $(PackageVersion) -Symbols"
-            LogStandardErrorAsError="true" />
-
+    <Exec Command="&quot;$(NuGetPath)&quot; pack &quot;$(NuGetPackageDir)/ServiceStack.Stripe.Core/servicestack.stripe.core.nuspec&quot; -OutputDirectory &quot;$(NuGetPackageDir)&quot; -Version $(PackageVersion)"
+          LogStandardErrorAsError="true" />
   </Target>
 </Project>

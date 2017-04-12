@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v1.3": {},
     ".NETStandard,Version=v1.3/": {
-      "servicestack.text/1.0.0": {
+      "servicestack.text/1.0.41": {
         "dependencies": {
           "MSBuild.Sdk.Extras": "1.0.1",
           "Microsoft.CSharp": "4.0.1",
@@ -803,7 +803,7 @@
     }
   },
   "libraries": {
-    "servicestack.text/1.0.0": {
+    "servicestack.text/1.0.41": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

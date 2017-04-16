@@ -1,4 +1,5 @@
-﻿using NUnitLite;
+﻿#if NUNITLITE
+using NUnitLite;
 using NUnit.Common;
 using System.Reflection;
 using ServiceStack;
@@ -39,3 +40,4 @@ namespace Stripe.Tests
         }
     }
 }
+#endif

@@ -576,13 +576,15 @@ namespace ServiceStack.Stripe
 
         private string apiKey;
         private string publishableKey;
+        private string stripeAccount;
         public ICredentials Credentials { get; set; }
         private string UserAgent { get; set; }
 
-        public StripeGateway(string apiKey, string publishableKey = null)
+        public StripeGateway(string apiKey, string publishableKey = null, string stripeAccount = null)
         {
             this.apiKey = apiKey;
             this.publishableKey = publishableKey;
+            this.stripeAccount = stripeAccount;
             Credentials = new NetworkCredential(apiKey, "");
             Timeout = TimeSpan.FromSeconds(60);
             UserAgent = "servicestack .net stripe v1";
@@ -607,6 +609,11 @@ namespace ServiceStack.Stripe
                 req.Headers["Idempotency-Key"] = idempotencyKey;
 
             req.Headers["Stripe-Version"] = APIVersion;
+
+            if(!string.IsNullOrWhiteSpace(stripeAccount))
+            {
+                req.Headers["Stripe-Account"] = stripeAccount;
+            }
 
             PclExport.Instance.Config(req,
                 userAgent: UserAgent,

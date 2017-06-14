@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>portable45-net45+win8</TargetFrameworks>
     <AssemblyName>Stripe</AssemblyName>
+    <RootNamespace>Stripe</RootNamespace>
     <PackageId>Stripe</PackageId>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>

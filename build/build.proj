@@ -82,7 +82,7 @@
 
     <!-- PCL -->
     <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.PCL.csproj"
-             Targets="Build"
+             Targets="Restore;Build"
              Properties="Version=$(PackageVersion);Configuration=$(Configuration)" />
 
     <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10')" />

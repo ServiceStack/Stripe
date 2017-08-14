@@ -13,7 +13,8 @@
     <PackageId>Stripe</PackageId>
     <RuntimeFrameworkVersion>1.1.1</RuntimeFrameworkVersion>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81+xamarinmac</PackageTargetFallback>    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81+xamarinmac</PackageTargetFallback>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -21,6 +22,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' != 'Debug' ">

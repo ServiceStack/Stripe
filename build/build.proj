@@ -69,7 +69,6 @@
 
     <ItemGroup>
       <StripeFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/net45/Stripe.*"></StripeFiles>
-      <StripePclFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/portable45-net45+win8/Stripe.*"></StripePclFiles>
     </ItemGroup>
 
     <!-- .NET 4.5 -->
@@ -79,14 +78,6 @@
 
     <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45')" />
     <Copy SourceFiles="%(StripeFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45" />
-
-    <!-- PCL -->
-    <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.PCL.csproj"
-             Targets="Restore;Build"
-             Properties="Version=$(PackageVersion);Configuration=$(Configuration)" />
-
-    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10')" />
-    <Copy SourceFiles="%(StripePclFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/portable-net45+win8+monotouch+monoandroid+xamarin.ios10" />
 
     <Exec Command="&quot;$(NuGetPath)&quot; pack &quot;$(NuGetPackageDir)/ServiceStack.Stripe/servicestack.stripe.nuspec&quot; -OutputDirectory &quot;$(NuGetPackageDir)&quot; -Version $(PackageVersion) -Symbols"
             LogStandardErrorAsError="true" />

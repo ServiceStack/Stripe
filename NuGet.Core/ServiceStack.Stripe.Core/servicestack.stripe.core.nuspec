@@ -19,7 +19,7 @@
     <language>en-US</language> 
     <copyright>ServiceStack 2016 and contributors</copyright>
     <dependencies>
-      <group targetFramework=".NETStandard1.1">
+      <group targetFramework=".netstandard2.0">
         <dependency id="System.Net.Requests" version="[4.0.11, )" />
         <dependency id="System.ServiceModel.Primitives" version="[4.1.0, )" />
         <dependency id="NETStandard.Library" version="[1.6.0, )" />

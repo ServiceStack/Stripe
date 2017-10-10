@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Default"
     xmlns='http://schemas.microsoft.com/developer/msbuild/2003' ToolsVersion="4.0">
   <Import Project="$(MSBuildProjectDirectory)/build.tasks" />
@@ -14,7 +14,7 @@
     <SrcDir>$(BuildSolutionDir)/src</SrcDir>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <NuGetPath>$(BuildSolutionDir)/src/.nuget/nuget.exe</NuGetPath>
-    <NuGetPackageDir>$(BuildSolutionDir)/NuGet.Core/</NuGetPackageDir>
+    <NuGetPackageDir>$(BuildSolutionDir)/NuGet/</NuGetPackageDir>
     <Version>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</Version>
     <PackageVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</PackageVersion>
   </PropertyGroup>
@@ -68,7 +68,7 @@
     <Delete Files="@(NugetPackageFilesToDelete)" />
 
     <ItemGroup>
-      <StripeCoreFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/netstandard1.1/Stripe.*"></StripeCoreFiles>
+      <StripeCoreFiles Include="$(SrcDir)/Stripe/bin/$(Configuration)/netstandard2.0/Stripe.*"></StripeCoreFiles>
     </ItemGroup>
 
     <!-- .NET 4.5 -->
@@ -76,10 +76,10 @@
              Targets="Build"
              Properties="Version=$(PackageVersion);Configuration=$(Configuration)" />
 
-    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard1.1" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard1.1')" />
-    <Copy SourceFiles="%(StripeCoreFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard1.1" />
+    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/netstandard2.0" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/netstandard2.0')" />
+    <Copy SourceFiles="%(StripeCoreFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/netstandard2.0" />
 
-    <Exec Command="&quot;$(NuGetPath)&quot; pack &quot;$(NuGetPackageDir)/ServiceStack.Stripe.Core/servicestack.stripe.core.nuspec&quot; -OutputDirectory &quot;$(NuGetPackageDir)&quot; -Version $(PackageVersion)"
+    <Exec Command="&quot;$(NuGetPath)&quot; pack &quot;$(NuGetPackageDir)/ServiceStack.Stripe/servicestack.stripe.nuspec&quot; -OutputDirectory &quot;$(NuGetPackageDir)&quot; -Version $(PackageVersion)"
           LogStandardErrorAsError="true" />
   </Target>
 </Project>

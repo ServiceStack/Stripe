@@ -78,8 +78,8 @@
     <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45')" />
     <Copy SourceFiles="%(StripeFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/net45" />
 
-    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard2.0" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard2.0')" />
-    <Copy SourceFiles="%(StripeCoreFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe.Core/lib/netstandard2.0" />
+    <MakeDir Directories="$(NuGetPackageDir)/ServiceStack.Stripe/lib/netstandard2.0" Condition="!Exists('$(NuGetPackageDir)/ServiceStack.Stripe/lib/netstandard2.0')" />
+    <Copy SourceFiles="%(StripeCoreFiles.Identity)" DestinationFolder="$(NuGetPackageDir)/ServiceStack.Stripe/lib/netstandard2.0" />
 
     <Exec Command="&quot;$(NuGetPath)&quot; pack &quot;$(NuGetPackageDir)/ServiceStack.Stripe/servicestack.stripe.nuspec&quot; -OutputDirectory &quot;$(NuGetPackageDir)&quot; -Version $(PackageVersion) -Symbols"
             LogStandardErrorAsError="true" />

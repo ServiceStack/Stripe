@@ -1,6 +1,7 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.10
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stripe.Tests", "..\tests\Stripe.Tests\Stripe.Tests.csproj", "{B2AA6A86-8B15-47B4-ACDE-DDABC7F5DBB3}"
 EndProject
@@ -9,12 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8336FEA3
 		..\build\build.bat = ..\build\build.bat
 		..\build\build.proj = ..\build\build.proj
 		..\build\build.tasks = ..\build\build.tasks
-		..\lib\copy.bat = ..\lib\copy.bat
-		..\build\copy.bat = ..\build\copy.bat
 		..\README.md = ..\README.md
-		..\NuGet.Core\ServiceStack.Stripe.Core\servicestack.stripe.core.nuspec = ..\NuGet.Core\ServiceStack.Stripe.Core\servicestack.stripe.core.nuspec
 		..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec = ..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec
-		..\build\build-core.proj = ..\build\build-core.proj
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stripe", "Stripe\Stripe.csproj", "{34E0CAC2-14C6-492A-AA02-DAFBF873F6FA}"
@@ -36,5 +33,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A117CA5-B855-477B-A51C-E56A68A485E7}
 	EndGlobalSection
 EndGlobal

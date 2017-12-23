@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>ServiceStack.Stripe</id>
-    <title>Typed message-based .NET Client Gateway for Stripe's REST API</title>
-    <version>5.0.0</version> 
-    <authors>ServiceStack</authors> 
+    <id>ServiceStack.Stripe.Core</id>
+    <title>ServiceStack.Stripe .NET Standard 2.0</title>
+    <version>5.0.0</version>
+    <authors>ServiceStack</authors>
     <owners>ServiceStack</owners>
-    <summary>Typed message-based .NET Client Gateway for Stripe's REST API</summary>
     <description>
-      A typed message-based .NET client gateway for accessing Stripe's REST API.
-      Used by servicestack.net to process merhcant payments and recurring subcriptions.
-    </description> 
+      .NET Standard 2.0 version of ServiceStack.Stripe
+    </description>
     <projectUrl>https://github.com/ServiceStack/Stripe</projectUrl>
     <licenseUrl>https://servicestack.net/terms</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -19,14 +17,11 @@
     <language>en-US</language> 
     <copyright>ServiceStack and contributors</copyright>
     <dependencies>
-      <group targetFramework="net45">
-        <dependency id="ServiceStack.Client" version="5.0.0" />
-      </group>
       <group targetFramework=".netstandard2.0">
         <dependency id="System.Net.Requests" version="[4.0.11, )" />
         <dependency id="System.ServiceModel.Primitives" version="[4.4.0, )" />
         <dependency id="System.Xml.XmlSerializer" version="[4.3.0, )" />
-        <dependency id="ServiceStack.Client" version="5.0.0" />
+        <dependency id="ServiceStack.Client.Core" version="5.0.0" />
       </group>
     </dependencies>
   </metadata>

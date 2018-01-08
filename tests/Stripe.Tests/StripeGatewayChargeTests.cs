@@ -61,6 +61,27 @@ namespace Stripe.Tests
             }
         }
 
+        [Test]
+        public void Can_Handle_Charge_Customer_with_CardDeclined_Code()
+        {
+            try
+            {
+                var newCustomerRequest = CreateStripeCustomerRequest();
+                //https://stripe.com/docs/testing#cards-responses
+                newCustomerRequest.Card.Number = "4000000000000002";
+                var customer = gateway.Post(newCustomerRequest);
+
+                Assert.Fail("Should throw");
+            }
+            catch (StripeException ex)
+            {
+                Assert.That(ex.Message, Is.EqualTo("Your card was declined."));
+                Assert.That(ex.Type, Is.EqualTo("card_error"));
+                Assert.That(ex.Code, Is.EqualTo("card_declined"));
+                Assert.That(ex.DeclineCode, Is.EqualTo("generic_decline"));
+                Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.PaymentRequired));
+            }
+        }
 
         [Test]
         public void Can_Handle_Charge_Invalid_Customer()
@@ -82,7 +103,6 @@ namespace Stripe.Tests
                 Assert.That(ex.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
             }
         }
-
 
         [Test]
         public void Can_Charge_Customer_with_idempotency_key()

@@ -857,6 +857,7 @@ namespace ServiceStack.Stripe.Types
         public string Message { get; set; }
         public string Code { get; set; }
         public string Param { get; set; }
+        public string DeclineCode { get; set; }
     }
 
     public class StripeException : Exception
@@ -867,9 +868,11 @@ namespace ServiceStack.Stripe.Types
             Code = error.Code;
             Param = error.Param;
             Type = error.Type;
+            DeclineCode = error.DeclineCode;
         }
 
         public string Code { get; set; }
+        public string DeclineCode { get; set; }
         public string Param { get; set; }
         public string Type { get; set; }
         public HttpStatusCode StatusCode { get; set; }

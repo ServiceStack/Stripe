@@ -591,10 +591,8 @@ namespace ServiceStack.Stripe
             Currency = Currencies.UnitedStatesDollar;
             JsConfig.InitStatics();
 
-#if !PCL && !NETSTANDARD1_1
             //https://support.stripe.com/questions/how-do-i-upgrade-my-stripe-integration-from-tls-1-0-to-tls-1-2#dotnet
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-#endif
         }
 
         protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)
@@ -650,17 +648,7 @@ namespace ServiceStack.Stripe
             }
             catch (WebException ex)
             {
-                string errorBody = ex.GetResponseBody();
-                var errorStatus = ex.GetStatus() ?? HttpStatusCode.BadRequest;
-
-                if (ex.IsAny400())
-                {
-                    var result = errorBody.FromJson<StripeErrors>();
-                    throw new StripeException(result.Error)
-                    {
-                        StatusCode = errorStatus
-                    };
-                }
+                HandleStripeException(ex);
 
                 throw;
             }
@@ -680,8 +668,7 @@ namespace ServiceStack.Stripe
             }
             catch (Exception ex)
             {
-                var webEx = ex.UnwrapIfSingleException() as WebException;
-                if (webEx != null)
+                if (ex.UnwrapIfSingleException() is WebException webEx)
                     HandleStripeException(webEx);
 
                 throw;
@@ -847,7 +834,7 @@ namespace ServiceStack.Stripe
                     continue;
 
                 url = url.AddQueryParam(
-                    "{0}[{1}]".Fmt(name, entry.Key),
+                    $"{name}[{entry.Key}]",
                     entry.Value.Value.ToUnixTime());
             }
 

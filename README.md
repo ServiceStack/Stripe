@@ -5,7 +5,7 @@ Stripe
 ======
 
 This project contains a Portable Class Library containing a typed .NET client gateway for accessing [Stripe's REST API](https://stripe.com/docs/api/).
-Used by [servicestack.net](http://servicestack.net/) to process merhcant payments and recurring subcriptions online.
+Used by [servicestack.net](http://servicestack.net/) to process merchant payments and recurring subcriptions online.
 
 ## Features
 

@@ -136,7 +136,6 @@ namespace Stripe.Tests
                 },
                 Interval = StripePlanInterval.month,
                 IntervalCount = 1,
-                TrialPeriodDays = 7,
             });
             return plan;
         }

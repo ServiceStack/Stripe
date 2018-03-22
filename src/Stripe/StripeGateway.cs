@@ -100,15 +100,14 @@ namespace ServiceStack.Stripe
     public class CreateStripeCustomer : IPost, IReturn<StripeCustomer>
     {
         public int AccountBalance { get; set; }
-        public StripeCard Card { get; set; }
+        public string BusinessVatId { get; set; }
         public string Coupon { get; set; }
+        public string DefaultSource { get; set; }
         public string Description { get; set; }
         public string Email { get; set; }
-        public string Plan { get; set; }
-        public int? Quantity { get; set; }
-        public DateTime? TrialEnd { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
-        public string BusinessVatId { get; set; }
+        public StripeShipping Shipping { get; set; }
+        public StripeCard Source { get; set; }
     }
 
     [Route("/customers")]
@@ -450,6 +449,11 @@ namespace ServiceStack.Stripe
         public int? IntervalCount { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
         public string Nickname { get; set; }
+
+        /// <summary>
+        /// Still supported but not specified in arguments in latest API Version: https://stripe.com/docs/api#create_plan
+        /// </summary>
+        public int? TrialPeriodDays { get; set; } 
     }
 
     [Route("/plans/{Id}")]
@@ -466,6 +470,11 @@ namespace ServiceStack.Stripe
         public Dictionary<string, string> Metadata { get; set; }
         public string Nickname { get; set; }
         public string Product { get; set; }
+
+        /// <summary>
+        /// Still supported but not specified in arguments in latest API Version: https://stripe.com/docs/api#create_plan
+        /// </summary>
+        public int? TrialPeriodDays { get; set; }
     }
 
     [Route("/plans/{Id}")]
@@ -494,6 +503,7 @@ namespace ServiceStack.Stripe
         public string Currency { get; set; }
         public int? DurationInMonths { get; set; }
         public int? MaxRedemptions { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
         public int? PercentOff { get; set; }
         public DateTime? RedeemBy { get; set; }
     }
@@ -502,6 +512,14 @@ namespace ServiceStack.Stripe
     public class GetStripeCoupon : IGet, IReturn<StripeCoupon>
     {
         public string Id { get; set; }
+    }
+
+    [Route("/coupons/{Id}")]
+    public class UpdateStripeCoupon : IPost, IReturn<StripeCoupon>
+    {
+        [IgnoreDataMember]
+        public string Id { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 
     [Route("/coupons/{Id}")]
@@ -1215,11 +1233,13 @@ namespace ServiceStack.Stripe.Types
 
     public class StripePlan : StripeId
     {
-        public bool Livemode { get; set; }
         public int Amount { get; set; }
+        public DateTime? Created { get; set; }
         public string Currency { get; set; }
-        public string Identifier { get; set; }
         public StripePlanInterval Interval { get; set; }
+        public int? IntervalCount { get; set; }
+        public bool Livemode { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
         public string Nickname { get; set; }
         public string Product { get; set; }
         public int? TrialPeriodDays { get; set; }
@@ -1255,15 +1275,18 @@ namespace ServiceStack.Stripe.Types
 
     public class StripeCoupon : StripeId
     {
-        public int? PercentOff { get; set; }
         public int? AmountOff { get; set; }
+        public DateTime? Created { get; set; }
         public string Currency { get; set; }
-        public bool Livemode { get; set; }
         public StripeCouponDuration Duration { get; set; }
-        public DateTime? RedeemBy { get; set; }
-        public int? MaxRedemptions { get; set; }
-        public int TimesRedeemed { get; set; }
         public int? DurationInMonths { get; set; }
+        public bool Livemode { get; set; }
+        public int? MaxRedemptions { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public int? PercentOff { get; set; }
+        public DateTime? RedeemBy { get; set; }
+        public int TimesRedeemed { get; set; }
+        public bool Valid { get; set; }
     }
 
     public enum StripeCouponDuration
@@ -1275,21 +1298,29 @@ namespace ServiceStack.Stripe.Types
 
     public class StripeCustomer : StripeId
     {
-        public DateTime? Created { get; set; }
-        public bool Livemode { get; set; }
-        public string Description { get; set; }
-        public string Email { get; set; }
-        public bool? Delinquent { get; set; }
-        public Dictionary<string, string> Metadata { get; set; }
-        public StripeCollection<StripeSubscription> Subscriptions { get; set; }
-        public StripeDiscount Discount { get; set; }
         public int AccountBalance { get; set; }
-        public StripeCollection<StripeCard> Sources { get; set; }
-
-        public bool Deleted { get; set; }
-        public string DefaultSource { get; set; }
-        public string Currency { get; set; }
         public string BusinessVatId { get; set; }
+        public DateTime? Created { get; set; }
+        public string DefaultSource { get; set; }
+        public bool? Delinquent { get; set; }
+        public string Description { get; set; }
+        public StripeDiscount Discount { get; set; }
+        public string Email { get; set; }
+        public string InvoicePrefix { get; set; }
+        public bool Livemode { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public StripeShipping Shipping { get; set; }
+        public StripeCollection<StripeCard> Sources { get; set; }
+        public StripeCollection<StripeSubscription> Subscriptions { get; set; }
+        public bool Deleted { get; set; }
+        public string Currency { get; set; }
+    }
+
+    public class StripeShipping
+    {
+        public StripeAddress Address { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
     }
 
     public class StripeDateRange
@@ -1302,6 +1333,11 @@ namespace ServiceStack.Stripe.Types
 
     public class StripeCard : StripeId
     {
+        public StripeCard()
+        {
+            this.Object = StripeType.card;
+        }
+
         public string Brand { get; set; }
         public string Number { get; set; }
         public string Last4 { get; set; }

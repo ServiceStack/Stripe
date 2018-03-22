@@ -68,7 +68,7 @@ namespace Stripe.Tests
             {
                 var newCustomerRequest = CreateStripeCustomerRequest();
                 //https://stripe.com/docs/testing#cards-responses
-                newCustomerRequest.Card.Number = "4000000000000002";
+                newCustomerRequest.Source.Number = "4000000000000002";
                 var customer = gateway.Post(newCustomerRequest);
 
                 Assert.Fail("Should throw");

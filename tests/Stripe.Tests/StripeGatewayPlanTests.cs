@@ -23,6 +23,7 @@ namespace Stripe.Tests
             Assert.That(product.Name, Is.EqualTo("Test Plan Product"));
             Assert.That(plan.Amount, Is.EqualTo(10000));
             Assert.That(plan.Interval, Is.EqualTo(StripePlanInterval.month));
+            Assert.That(plan.TrialPeriodDays, Is.EqualTo(7));
         }
 
         [Test]
@@ -54,8 +55,10 @@ namespace Stripe.Tests
             {
                 Id = plan.Id,
                 Nickname = "NEW PLAN UPDATED",
+                TrialPeriodDays = 14,
             });
             Assert.That(updatedPlan.Product, Is.EqualTo("TEST-PLAN-01"));
+            Assert.That(updatedPlan.TrialPeriodDays, Is.EqualTo(14));
         }
 
         [Test]

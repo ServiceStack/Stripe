@@ -26,6 +26,10 @@ namespace Stripe.Tests
             Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
             Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
+
+            Assert.That(customer.Shipping.Name, Is.EqualTo("Ship To"));
+            Assert.That(customer.Shipping.Phone, Is.EqualTo("555-5555-5555"));
+            Assert.That(customer.Shipping.Address.Line1, Is.EqualTo("1 Address Road"));
         }
 
         [Test]

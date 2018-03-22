@@ -31,7 +31,7 @@ namespace Stripe.Tests
             return new CreateStripeCustomer
             {
                 AccountBalance = 10000,
-                Card = new StripeCard
+                Source = new StripeCard
                 {
                     Name = "Test Card",
                     Number = "4242424242424242",
@@ -43,6 +43,19 @@ namespace Stripe.Tests
                     AddressZip = "City",
                     AddressState = "NY",
                     AddressCountry = "US",
+                },
+                Shipping = new StripeShipping
+                {
+                    Name = "Ship To",
+                    Phone = "555-5555-5555",
+                    Address = new StripeAddress
+                    {
+                        Line1 = "1 Address Road",
+                        Line2 = "12345",
+                        City = "City",
+                        State = "NY",
+                        Country = "US",
+                    },
                 },
                 Description = "Description",
                 Email = "test@email.com",
@@ -123,6 +136,7 @@ namespace Stripe.Tests
                 },
                 Interval = StripePlanInterval.month,
                 IntervalCount = 1,
+                TrialPeriodDays = 7,
             });
             return plan;
         }

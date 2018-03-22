@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Stripe.Tests
 {
     public class TestsBase
     {
-        //Register License Key in SERVICESTACK_LICENSE Environment Variable or in App.config
+        //Register License Key in SERVICESTACK_LICENSE Environment Variable or in App.config, test account team@
         protected readonly StripeGateway gateway = new StripeGateway("sk_test_Q9XojyuQxzWqe8b2rm6Vodna");
 
         protected StripeCustomer CreateCustomer()
@@ -95,16 +96,80 @@ namespace Stripe.Tests
 
         protected StripePlan CreatePlan(string id = "TEST-PLAN-01")
         {
+            try
+            {
+                var product = gateway.Send(new GetStripeProduct { Id = id });
+                if (product != null)
+                {
+                    gateway.Send(new DeleteStripeProduct { Id = id });
+                }
+            }
+            catch (StripeException ex)
+            {
+                if (ex.StatusCode != HttpStatusCode.NotFound)
+                    throw;
+            }
+
             var plan = gateway.Post(new CreateStripePlan
             {
                 Id = id,
                 Amount = 10000,
                 Currency = "usd",
-                Name = "Test Plan",
+                Nickname = "Test Plan",
+                Product = new StripePlanProduct
+                {
+                    Id = id,
+                    Name = "Test Plan Product",
+                },
                 Interval = StripePlanInterval.month,
                 IntervalCount = 1,
             });
             return plan;
+        }
+
+        protected StripeProduct GetOrCreateProduct(string id = "TEST-PRODUCT-01")
+        {
+            try
+            {
+                return gateway.Get(new GetStripeProduct { Id = id });
+            }
+            catch (StripeException ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                    return CreateProduct(id);
+
+                throw;
+            }
+        }
+        protected StripeProduct CreateProduct(string id = "TEST-PRODUCT-01")
+        {
+            var createStripeProduct = new CreateStripeProduct
+            {
+                Id = id,
+                Name = "Test Product",
+                Active = true,
+                Attributes = new[] { "foo", "bar" },
+                Caption = "Product Caption",
+                Description = "Product Description",
+                Images = new[] { "http://url.to/img.jpg" },
+                Metadata = new Dictionary<string, string>
+                {
+                    {"foo", "bar"}
+                },
+                PackageDimensions = new StripePackageDimensions
+                {
+                    Height = 100,
+                    Width = 200,
+                    Length = 300,
+                    Weight = 400,
+                },
+                Shippable = true,
+                Type = StripeProductType.good,
+                //StatementDescriptor = "Product Descriptor",  only for `service`
+                Url = "http://url.to/product",
+            };
+            var product = gateway.Send(createStripeProduct);
+            return product;
         }
     }
 }

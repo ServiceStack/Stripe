@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
@@ -80,7 +81,15 @@ namespace ServiceStack.Stripe
 
         public string ToUrl(string absoluteUrl)
         {
-            return Include == null ? absoluteUrl : absoluteUrl.AddQueryParam("include[]", string.Join(",", Include));
+            if (Include?.Length > 0)
+            {
+                foreach (var include in Include)
+                {
+                    absoluteUrl = absoluteUrl.AddQueryParam("include[]", include);
+                }
+            }
+
+            return absoluteUrl;
         }
     }
 
@@ -156,6 +165,7 @@ namespace ServiceStack.Stripe
         public int? Limit { get; set; }
         public string StartingAfter { get; set; }
         public string EndingBefore { get; set; }
+        public string Email { get; set; }
 
         public DateTime? Created { get; set; }
 
@@ -277,6 +287,154 @@ namespace ServiceStack.Stripe
         public string SubscriptionId { get; set; }
     }
 
+    /* Products
+	 * https://stripe.com/docs/api#products
+	 */
+
+    [Route("/products/{Id}")]
+    public class GetStripeProduct : IGet, IReturn<StripeProduct>
+    {
+        public string Id { get; set; }
+    }
+
+    [Route("/products")]
+    public class CreateStripeProduct : IPost, IReturn<StripeProduct>, IStripeProduct, IUrlFilter
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public StripeProductType Type { get; set; }
+        public bool Active { get; set; }
+        [IgnoreDataMember]
+        public string[] Attributes { get; set; }
+        public string Caption { get; set; }
+        [IgnoreDataMember]
+        public string[] DeactivateOn { get; set; }
+        public string Description { get; set; }
+        [IgnoreDataMember]
+        public string[] Images { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public StripePackageDimensions PackageDimensions { get; set; }
+        public bool Shippable { get; set; }
+        public string StatementDescriptor { get; set; }
+        public string Url { get; set; }
+
+        public string ToUrl(string absoluteUrl) => this.UpdateUrl(absoluteUrl);
+    }
+
+    [Route("/products/{Id}")]
+    public class UpdateStripeProduct : IPost, IReturn<StripeProduct>, IStripeProduct, IUrlFilter
+    {
+        [IgnoreDataMember]
+        public string Id { get; set; }
+        [IgnoreDataMember]
+        public string[] Attributes { get; set; }
+        public string Caption { get; set; }
+        [IgnoreDataMember]
+        public string[] DeactivateOn { get; set; }
+        public string Description { get; set; }
+        [IgnoreDataMember]
+        public string[] Images { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public string Name { get; set; }
+        public StripePackageDimensions PackageDimensions { get; set; }
+        public bool Shippable { get; set; }
+        public string StatementDescriptor { get; set; }
+        public string Url { get; set; }
+
+        public string ToUrl(string absoluteUrl) => this.UpdateUrl(absoluteUrl);
+    }
+
+    public interface IStripeProduct
+    {
+        string Id { get; set; }
+        [IgnoreDataMember]
+        string[] Attributes { get; set; }
+        string Caption { get; set; }
+        [IgnoreDataMember]
+        string[] DeactivateOn { get; set; }
+        string Description { get; set; }
+        [IgnoreDataMember]
+        string[] Images { get; set; }
+        Dictionary<string, string> Metadata { get; set; }
+        string Name { get; set; }
+        StripePackageDimensions PackageDimensions { get; set; }
+        bool Shippable { get; set; }
+        string StatementDescriptor { get; set; }
+        string Url { get; set; }
+    }
+
+    internal static class ProductExtensions
+    {
+        internal static string UpdateUrl(this IStripeProduct product, string url)
+        {
+            if (product.Attributes?.Length > 0)
+            {
+                foreach (var attr in product.Attributes)
+                {
+                    url = url.AddQueryParam("attributes[]", attr);
+                }
+            }
+
+            if (product.DeactivateOn?.Length > 0)
+            {
+                foreach (var item in product.DeactivateOn)
+                {
+                    url = url.AddQueryParam("deactivate_on[]", item);
+                }
+            }
+
+            if (product.Images?.Length > 0)
+            {
+                foreach (var image in product.Images)
+                {
+                    url = url.AddQueryParam("images[]", image);
+                }
+            }
+
+            return url;
+        }
+    }
+
+    [Route("/products/{Id}")]
+    public class DeleteStripeProduct : IDelete, IReturn<StripeReference>
+    {
+        public string Id { get; set; }
+    }
+
+    [Route("/plans")]
+    public class GetStripeProducts : IGet, IReturn<StripeCollection<StripeProduct>>, IUrlFilter
+    {
+        public DateTime? Created { get; set; }
+        public string EndingBefore { get; set; }
+        [IgnoreDataMember]
+        public string[] Ids { get; set; }
+        public int? Limit { get; set; }
+        public string StartingAfter { get; set; }
+        public bool Shippable { get; set; }
+        public StripeProductType? Type { get; set; }
+        public string Url { get; set; }
+
+        [IgnoreDataMember]
+        public StripeDateOptions CreatedOptions { get; set; }
+
+        public string ToUrl(string absoluteUrl)
+        {
+            absoluteUrl = Created != null || CreatedOptions == null
+                ? absoluteUrl
+                : absoluteUrl.AppendOptions("date", CreatedOptions);
+
+            if (Ids?.Length > 0)
+            {
+                foreach (var id in Ids)
+                {
+                    absoluteUrl = absoluteUrl.AddQueryParam("ids[]", id);
+                }
+            }
+
+            return absoluteUrl;
+        }
+    }
+
 
     /* Plans
 	 * https://stripe.com/docs/api/curl#plans
@@ -285,12 +443,13 @@ namespace ServiceStack.Stripe
     public class CreateStripePlan : IPost, IReturn<StripePlan>
     {
         public string Id { get; set; }
-        public int Amount { get; set; }
         public string Currency { get; set; }
         public StripePlanInterval Interval { get; set; }
+        public StripePlanProduct Product { get; set; }
+        public int Amount { get; set; }
         public int? IntervalCount { get; set; }
-        public string Name { get; set; }
-        public int? TrialPeriodDays { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public string Nickname { get; set; }
     }
 
     [Route("/plans/{Id}")]
@@ -304,8 +463,9 @@ namespace ServiceStack.Stripe
     {
         [IgnoreDataMember]
         public string Id { get; set; }
-        public string Name { get; set; }
         public Dictionary<string, string> Metadata { get; set; }
+        public string Nickname { get; set; }
+        public string Product { get; set; }
     }
 
     [Route("/plans/{Id}")]
@@ -437,12 +597,20 @@ namespace ServiceStack.Stripe
     /*
         Accounts
     */
+
+    public enum StripeAccountType
+    {
+        custom,
+        standard,
+        express,
+    }
+
     [Route("/accounts")]
     public class CreateStripeAccount : IPost, IReturn<CreateStripeAccountResponse>
     {
         public string Country { get; set; }
-        public bool Managed { get; set; }
         public string Email { get; set; }
+        public StripeAccountType Type { get; set; }
         public StripeTosAcceptance TosAcceptance { get; set; }
         public StripeLegalEntity LegalEntity { get; set; }
     }
@@ -490,7 +658,6 @@ namespace ServiceStack.Stripe
         public string DisplayName { get; set; }
         public string Email { get; set; }
         public StripeLegalEntity LegalEntity { get; set; }
-        public bool Managed { get; set; }
         public string ProductDescription { get; set; }
         public string StatementDescriptor { get; set; }
         public string SupportEmail { get; set; }
@@ -568,7 +735,7 @@ namespace ServiceStack.Stripe
     public class StripeGateway : IRestGateway
     {
         private const string BaseUrl = "https://api.stripe.com/v1";
-        private const string APIVersion = "2015-10-16";
+        private const string APIVersion = "2018-02-28";
 
         public TimeSpan Timeout { get; set; }
 
@@ -913,6 +1080,7 @@ namespace ServiceStack.Stripe.Types
         token,
         transfer,
         list,
+        product,
     }
 
     public class StripeInvoice : StripeId
@@ -961,6 +1129,90 @@ namespace ServiceStack.Stripe.Types
         public Dictionary<string, string> Metadata { get; set; }
     }
 
+    public class StripeProduct : StripeId, IStripeProduct
+    {
+        public bool Active { get; set; }
+        public string[] Attributes { get; set; }
+        public string Caption { get; set; }
+        public DateTime? Created { get; set; }
+        public string[] DeactivateOn { get; set; }
+        public string Description { get; set; }
+        public string[] Images { get; set; }
+        public bool Livemode { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public string Name { get; set; }
+        public StripePackageDimensions PackageDimensions { get; set; }
+        public bool Shippable { get; set; }
+        public StripeCollection<StripeSku> Skus { get; set; }
+        public string StatementDescriptor { get; set; }
+        public StripeProductType Type { get; set; }
+        public DateTime? Updated { get; set; }
+        public string Url { get; set; }
+    }
+
+    public enum StripeProductType
+    {
+        good,
+        service,
+    }
+
+    public class StripePackageDimensions
+    {
+        /// <summary>
+        /// Height in inches
+        /// </summary>
+        public decimal Height { get; set; }
+
+        /// <summary>
+        /// Width in inches
+        /// </summary>
+        public decimal Width { get; set; }
+
+        /// <summary>
+        /// Weight in inches
+        /// </summary>
+        public decimal Weight { get; set; }
+
+        /// <summary>
+        /// Length in inches
+        /// </summary>
+        public decimal Length { get; set; }
+    }
+
+    public class StripeSku : StripeId
+    {
+        public bool Active { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
+        public DateTime? Created { get; set; }
+        public string Currency { get; set; }
+        public string Image { get; set; }
+        public StripeInventory Inventory { get; set; }
+        public bool Livemode { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
+        public StripePackageDimensions PackageDimensions { get; set; }
+    }
+
+    public class StripeInventory
+    {
+        public int Quantity { get; set; }
+        public StripeInventoryType Type { get; set; }
+        public StripeInventoryValue Value { get; set; }
+    }
+
+    public enum StripeInventoryType
+    {
+        finite,
+        bucket,
+        infinite,
+    }
+
+    public enum StripeInventoryValue
+    {
+        in_stock,
+        limited,
+        out_of_stock,
+    }
+
     public class StripePlan : StripeId
     {
         public bool Livemode { get; set; }
@@ -968,8 +1220,17 @@ namespace ServiceStack.Stripe.Types
         public string Currency { get; set; }
         public string Identifier { get; set; }
         public StripePlanInterval Interval { get; set; }
-        public string Name { get; set; }
+        public string Nickname { get; set; }
+        public string Product { get; set; }
         public int? TrialPeriodDays { get; set; }
+    }
+
+    public class StripePlanProduct
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string StatementDescriptor { get; set; }
+        public Dictionary<string, string> Metadata { get; set; }
     }
 
     public class StripePeriod
@@ -1029,13 +1290,6 @@ namespace ServiceStack.Stripe.Types
         public string DefaultSource { get; set; }
         public string Currency { get; set; }
         public string BusinessVatId { get; set; }
-    }
-
-    public class GetAllStripeCustomers
-    {
-        public int? Count { get; set; }
-        public int? Offset { get; set; }
-        public StripeDateRange Created { get; set; }
     }
 
     public class StripeDateRange

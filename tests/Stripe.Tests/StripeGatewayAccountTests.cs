@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using ServiceStack.Stripe;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
@@ -8,14 +9,50 @@ namespace Stripe.Tests
     [TestFixture]
     public class StripeGatewayAccountTests : TestsBase
     {
+        public void DeleteAllCustomersWithEmail(string email)
+        {
+            StripeCollection<StripeCustomer> existingCustomers = null;
+            do
+            {
+                existingCustomers = gateway.Send(new GetStripeCustomers
+                {
+                    Email = email,
+                    Limit = 100
+                });
+
+                foreach (var customer in existingCustomers.Data)
+                {
+                    DeleteCustomer(customer);
+                }
+            } while (existingCustomers.Data.Count >= 100);
+        }
+
+        private void DeleteCustomer(StripeCustomer account)
+        {
+            var stripeId = account.Id;
+            try
+            {
+                $"Deleting Customer: {stripeId} - {account.Email} ".Print();
+                gateway.Send(new DeleteStripeCustomer
+                {
+                    Id = stripeId
+                });
+            }
+            catch (System.Exception ex)
+            {
+                $"Error trying to delete {stripeId}: {ex.Message}".Print();
+            }
+        }
+
         [Test]
         public void Can_Create_Account()
         {
+            DeleteAllCustomersWithEmail("test@email.com");
+
             var response = gateway.Post(new CreateStripeAccount
             {
                 Country = "US",
                 Email = "test@email.com",
-                Managed = true,
                 LegalEntity = new StripeLegalEntity
                 {
                     Address = new StripeAddress

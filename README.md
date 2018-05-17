@@ -4,8 +4,9 @@ for updates, or [StackOverflow](http://stackoverflow.com/questions/ask) or the [
 Stripe
 ======
 
-This project contains a Portable Class Library containing a typed .NET client gateway for accessing [Stripe's REST API](https://stripe.com/docs/api/).
-Used by [servicestack.net](http://servicestack.net/) to process merchant payments and recurring subcriptions online.
+This project contains a .NET v4.5 and .NET Standard 2.0 Library containing a typed .NET client gateway for accessing [Stripe's REST API](https://stripe.com/docs/api/), updated to the latest **2018-02-28** Stripe API Version available.
+
+It's used by [servicestack.net](http://servicestack.net/) to process merchant payments and recurring subscriptions online.
 
 ## Features
 
@@ -24,9 +25,9 @@ Install from NuGet with:
 
 Includes Portable Version (.NET 4.5, iOS, Android + Windows Store) 
 
-### .NET Core
+### ASP.NET Core on .NET Framework
 
-.NET Core version is also available from:
+To use this library in [ASP.NET Core Apps running on the .NET Framework](http://docs.servicestack.net/templates-corefx), install the **.NET Standard 2.0** only NuGet package instead:
 
     PM> Install-Package ServiceStack.Stripe.Core
 

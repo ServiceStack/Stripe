@@ -31,6 +31,7 @@
     <Reference Include="..\..\lib\net45\ServiceStack.Interfaces.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Text.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Client.dll" />
+    <PackageReference Include="System.Memory" Version="4.5.1" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
@@ -51,7 +52,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.1.1" />
   
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Interfaces.dll" />
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Text.dll" />

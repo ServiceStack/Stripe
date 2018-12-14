@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>Stripe</AssemblyName>
-    <PackageId>ServiceStack.Stripe</PackageId>
-    <Title>Typed message-based .NET Client Gateway for Stripe's REST API</Title>
+    <PackageId>ServiceStack.Stripe.Core</PackageId>
+    <Title>ServiceStack.Stripe .NET Standard 2.0</Title>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <PackageDescription>
       A typed message-based .NET client gateway for accessing Stripe's REST API.
@@ -12,14 +12,10 @@
     </PackageDescription>
     <PackageTags>Stripe;Typed;REST;API;JSON;Gateway;Message</PackageTags>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="ServiceStack.Client" Version="$(Version)" />
     <PackageReference Include="ServiceStack.Text" Version="$(Version)" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System.Net" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

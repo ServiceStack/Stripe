@@ -68,13 +68,19 @@
              Targets="Build;Pack"
              Properties="Configuration=$(Configuration)" />
 
-    <!-- Stripe.Core -->
+
+    <!-- Restore for *.Core.csproj -->
     <CallTarget Targets="ClearNuGetRestoreCaches" />
+
+
+    <!-- Stripe.Core -->
     <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.Core.csproj" Targets="Restore" />
     <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.Core.csproj"
              Targets="Build;Pack"
              Properties="Configuration=$(Configuration)" />
 
+
+    <!-- Copy all *.nupkg to /NuGet -->
     <ItemGroup>
       <NugetPackagesToMove Include="$(BuildSolutionDir)/src/**/bin/$(Configuration)/*.nupkg"/>
     </ItemGroup>

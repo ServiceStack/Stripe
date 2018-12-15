@@ -10,10 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{8336FEA3
 		..\build\build.bat = ..\build\build.bat
 		..\build\build.proj = ..\build\build.proj
 		..\build\build.tasks = ..\build\build.tasks
-		..\lib\copy.bat = ..\lib\copy.bat
 		..\README.md = ..\README.md
-		..\NuGet\ServiceStack.Stripe.Core\servicestack.stripe.core.nuspec = ..\NuGet\ServiceStack.Stripe.Core\servicestack.stripe.core.nuspec
-		..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec = ..\NuGet\ServiceStack.Stripe\servicestack.stripe.nuspec
 		Stripe\Stripe.Core.csproj = Stripe\Stripe.Core.csproj
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection

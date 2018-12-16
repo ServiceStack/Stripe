@@ -5,7 +5,6 @@
     <AssemblyName>Stripe</AssemblyName>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Title>ServiceStack.Stripe .NET Standard 2.0</Title>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <PackageDescription>
       A typed message-based .NET client gateway for accessing Stripe's REST API.
       Used by servicestack.net to process merchant payments and recurring subscriptions.

@@ -30,11 +30,11 @@
   </Target>
 
   <Target Name="BuildSolutions">
+    <ItemGroup>
+      <NugetPackageFilesToDelete Include="$(NuGetPackageDir)/*.nupkg"/>
+    </ItemGroup>
+    <Delete Files="@(NugetPackageFilesToDelete)" />
     <CallTarget Targets="ClearNuGetRestoreCaches" />
-    <MSBuild Projects="$(BuildSolutionDir)/src/Stripe.sln" Targets="Restore" />
-
-    <MSBuild Projects="$(BuildSolutionDir)/src/Stripe.sln" Targets="Build"
-             Properties="Configuration=$(Configuration)" />
   </Target>
 
   <!-- need to remove old caches from nuget restore from .Core csproj's -->
@@ -56,8 +56,10 @@
 
   <Target Name="Default" DependsOnTargets="$(DoBuildSolutionsDependsOn)">
 
-    <!-- Stripe -->
-    <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.csproj"
+
+    <!-- Stripe.Core -->
+    <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.Core.csproj" Targets="Restore" />
+    <MSBuild Projects="$(BuildSolutionDir)/src/Stripe/Stripe.Core.csproj"
              Targets="Build;Pack"
              Properties="Configuration=$(Configuration)" />
 

@@ -419,7 +419,7 @@ namespace ServiceStack.Stripe
         public string Id { get; set; }
     }
 
-    [Route("/plans")]
+    [Route("/products")]
     public class GetStripeProducts : IGet, IReturn<StripeCollection<StripeProduct>>, IUrlFilter
     {
         public DateTime? Created { get; set; }

@@ -257,6 +257,22 @@ namespace ServiceStack.Stripe
     /* Subscriptions
 	 * https://stripe.com/docs/api/curl#subscriptions
 	 */
+    [Route("/subscriptions/{SubscriptionId}")]
+    public class GetStripeSubscription : IGet, IReturn<StripeSubscription>
+    {
+        public string SubscriptionId { get; set; }
+    }
+
+    [Route("/subscriptions/{SubscriptionId}")]
+    public class CancelStripeSubscription : IDelete, IReturn<StripeSubscription>
+    {
+        public string SubscriptionId { get; set; }
+        public bool? InvoiceNow { get; set; }
+        public bool? Prorate { get; set; }
+    }
+
+    /* Customer Subscriptions (Old)
+	 */
     [Route("/customers/{CustomerId}/subscription")]
     public class SubscribeStripeCustomer : IPost, IReturn<StripeSubscription>
     {
@@ -270,21 +286,24 @@ namespace ServiceStack.Stripe
         public int? Quantity { get; set; }
         public int? ApplicationFeePercent { get; set; }
     }
-
-    [Route("/customers/{CustomerId}/subscription")]
-    public class CancelStripeSubscription : IDelete, IReturn<StripeSubscription>
-    {
-        public string CustomerId { get; set; }
-        public bool AtPeriodEnd { get; set; }
-    }
-
-
+    
+    [Obsolete("Use GetStripeSubscription")]
     [Route("/customers/{CustomerId}/subscriptions/{SubscriptionId}")]
-    public class GetStripeSubscription : IGet, IReturn<StripeSubscription>
+    public class GetStripeCustomerSubscription : IGet, IReturn<StripeSubscription>
     {
         public string CustomerId { get; set; }
         public string SubscriptionId { get; set; }
     }
+    
+    [Obsolete("Use CancelStripeSubscription")]
+    [Route("/customers/{CustomerId}/subscription")]
+    public class CancelStripeCustomerSubscriptions : IDelete, IReturn<StripeSubscription>
+    {
+        public string CustomerId { get; set; }
+        public bool AtPeriodEnd { get; set; }
+    }
+    
+    
 
     /* Products
 	 * https://stripe.com/docs/api#products
@@ -871,8 +890,7 @@ namespace ServiceStack.Stripe
                 {
                     DateHandler = DateHandler.UnixTime,
                     PropertyConvention = PropertyConvention.Lenient,
-                    EmitLowercaseUnderscoreNames = true,
-                    EmitCamelCaseNames = false
+                    TextCase = TextCase.SnakeCase,
                 });
 
                 holdQsStrategy = QueryStringSerializer.ComplexTypeStrategy;

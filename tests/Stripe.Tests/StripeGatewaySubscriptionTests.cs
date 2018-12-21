@@ -50,6 +50,31 @@ namespace Stripe.Tests
 
             var cancelled = gateway.Delete(new CancelStripeSubscription
             {
+                SubscriptionId = subscription.Id,
+                InvoiceNow = true,
+                Prorate = true,
+            });
+
+            Assert.That(cancelled.Customer, Is.EqualTo(customer.Id));
+            Assert.That(cancelled.Id, Is.EqualTo(subscription.Id));
+            Assert.That(cancelled.Status, Is.EqualTo(StripeSubscriptionStatus.Canceled));
+        }
+
+        [Test]
+        public void Can_Cancel_Customer_Subscription()
+        {
+            var customer = CreateCustomer();
+            var plan = GetOrCreatePlan();
+
+            var subscription = gateway.Post(new SubscribeStripeCustomer
+            {
+                CustomerId = customer.Id,
+                Plan = plan.Id,
+                Quantity = 1,
+            });
+
+            var cancelled = gateway.Delete(new CancelStripeCustomerSubscriptions
+            {
                 CustomerId = customer.Id,
                 AtPeriodEnd = false,
             });
@@ -72,15 +97,14 @@ namespace Stripe.Tests
                 Quantity = 1,
             });
 
-            var retreivedSubscription = gateway.Get(new GetStripeSubscription
+            var retrievedSubscription = gateway.Get(new GetStripeSubscription
             {
-                CustomerId = customer.Id,
                 SubscriptionId = subscription.Id
             });
 
-            Assert.That(retreivedSubscription.Customer, Is.EqualTo(customer.Id));
-            Assert.That(retreivedSubscription.Id, Is.EqualTo(subscription.Id));
-            Assert.That(plan.Id, Is.EqualTo(retreivedSubscription.Plan.Id));
+            Assert.That(retrievedSubscription.Customer, Is.EqualTo(customer.Id));
+            Assert.That(retrievedSubscription.Id, Is.EqualTo(subscription.Id));
+            Assert.That(plan.Id, Is.EqualTo(retrievedSubscription.Plan.Id));
         }
     }
 }

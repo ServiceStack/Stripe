@@ -46,7 +46,9 @@ namespace Stripe.Tests
         public void Can_Create_Product_with_conflicting_JsConfig()
         {
             JsConfig.TreatEnumAsInteger = true;
-            var product = CreateProduct(id: "TEST-PRODUCT-01-JSCONFIG");
+            var prodId = "TEST-PRODUCT-01-JSCONFIG";
+            var product = CreateProduct(id: prodId);
+            Assert.That(prodId, Is.EqualTo(product.Id));
             DeleteProduct(product.Id);
         }
 

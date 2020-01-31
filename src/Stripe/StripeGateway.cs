@@ -886,12 +886,13 @@ namespace ServiceStack.Stripe
 
             public ConfigScope()
             {
-                jsConfigScope = JsConfig.With(new Config
-                {
-                    DateHandler = DateHandler.UnixTime,
-                    PropertyConvention = PropertyConvention.Lenient,
-                    TextCase = TextCase.SnakeCase,
-                });
+                var config = Config.Defaults;
+                config.DateHandler = DateHandler.UnixTime;
+                config.PropertyConvention = PropertyConvention.Lenient;
+                config.TextCase = TextCase.SnakeCase;
+                config.TreatEnumAsInteger = false;
+
+                jsConfigScope = JsConfig.With(config);
 
                 holdQsStrategy = QueryStringSerializer.ComplexTypeStrategy;
                 QueryStringSerializer.ComplexTypeStrategy = QueryStringStrategy.FormUrlEncoded;

@@ -79,11 +79,6 @@ namespace Stripe.Tests
                 AtPeriodEnd = false,
             });
 
-            //var cancelled = gateway.Delete(new CancelStripeSubscription
-            //{
-            //    SubscriptionId = subscription.Id,
-            //});
-
             Assert.That(cancelled.Customer, Is.EqualTo(customer.Id));
             Assert.That(cancelled.Id, Is.EqualTo(subscription.Id));
             Assert.That(cancelled.Status, Is.EqualTo(StripeSubscriptionStatus.Canceled));

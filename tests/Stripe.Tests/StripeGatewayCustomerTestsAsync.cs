@@ -68,7 +68,7 @@ namespace Stripe.Tests
         [Test]
         public async Task Can_Create_Customer_with_conflicting_JsConfig()
         {
-            JsConfig.EmitCamelCaseNames = true;
+            JsConfig.TextCase = TextCase.CamelCase;
 
             var customer = await CreateCustomerAsync();
 

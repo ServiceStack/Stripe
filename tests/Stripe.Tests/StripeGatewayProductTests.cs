@@ -36,7 +36,7 @@ namespace Stripe.Tests
             {
                 gateway.Delete(new DeleteStripeProduct { Id = "TEST-PRODUCT-01" });
             }
-            catch (Exception e) { }
+            catch (Exception) { }
 
             var product = CreateProduct();
             product.PrintDump();

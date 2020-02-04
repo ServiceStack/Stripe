@@ -25,7 +25,7 @@ namespace Stripe.Tests
             Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
             Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
+            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2030));
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace Stripe.Tests
                     Number = "4242424242424242",
                     Cvc = "123",
                     ExpMonth = 1,
-                    ExpYear = 2020,
+                    ExpYear = 2030,
                     AddressLine1 = "1 Address Road",
                     AddressLine2 = "12345",
                     AddressZip = "City",
@@ -62,7 +62,7 @@ namespace Stripe.Tests
             Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
             Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
+            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2030));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Stripe.Tests
             Assert.That(customer.Sources.TotalCount, Is.EqualTo(1));
             Assert.That(customer.Sources.Data[0].Name, Is.EqualTo("Test Card"));
             Assert.That(customer.Sources.Data[0].ExpMonth, Is.EqualTo(1));
-            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2020));
+            Assert.That(customer.Sources.Data[0].ExpYear, Is.EqualTo(2030));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Stripe.Tests
                     Number = "4242424242424242",
                     Cvc = "123",
                     ExpMonth = 1,
-                    ExpYear = 2020,
+                    ExpYear = 2030,
                     AddressLine1 = "1 Address Road",
                     AddressLine2 = "12345",
                     AddressZip = "City",

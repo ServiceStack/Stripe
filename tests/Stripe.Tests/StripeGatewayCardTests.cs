@@ -102,7 +102,7 @@ namespace Stripe.Tests
                 AddressCountry = "US",
 
                 ExpMonth = 2,
-                ExpYear = 2020,
+                ExpYear = 2030,
             });
 
             Assert.That(card.Name, Is.EqualTo("Test Card Updated"));

@@ -350,7 +350,7 @@ var card = gateway.Post(new UpdateStripeCard
     AddressCountry = "US",
 
     ExpMonth = 2,
-    ExpYear = 2020,
+    ExpYear = 2030,
 });
 ```
 

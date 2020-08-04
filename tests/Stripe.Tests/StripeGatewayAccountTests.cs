@@ -67,7 +67,11 @@ namespace Stripe.Tests
                     BusinessName = "Business Name",
                     FirstName = "First",
                     LastName = "Last",
-                }
+                },
+                RequestedCapabilities = new[] {
+                    StripeCapability.card_payments,
+                    StripeCapability.transfers,
+                }, 
             });
 
             response.PrintDump();
@@ -99,7 +103,7 @@ namespace Stripe.Tests
             Assert.That(verification.DisabledReason, Is.EqualTo("fields_needed"));
             Assert.That(verification.DueBy, Is.Null);
             Assert.That(verification.FieldsNeeded, Is.Not.Null);
-            Assert.That(verification.FieldsNeeded.Length, Is.EqualTo(4));
+            Assert.That(verification.FieldsNeeded.Length, Is.EqualTo(8));
         }
     }
 }

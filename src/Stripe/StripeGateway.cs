@@ -642,14 +642,44 @@ namespace ServiceStack.Stripe
         express,
     }
 
+    // https://github.com/stripe/stripe-node/blob/master/types/2020-03-02/Accounts.d.ts
+    public enum StripeCapability
+    {
+        au_becs_debit_payments,
+        bacs_debit_payments,
+        card_issuing,
+        card_payments,
+        cartes_bancaires_payments,
+        fpx_payments,
+        jcb_payments,
+        legacy_payments,
+        tax_reporting_us_1099_misc,
+        tax_reporting_us_1099_k,
+        transfers,
+    }
+
     [Route("/accounts")]
-    public class CreateStripeAccount : IPost, IReturn<CreateStripeAccountResponse>
+    public class CreateStripeAccount : IPost, IReturn<CreateStripeAccountResponse>, IUrlFilter
     {
         public string Country { get; set; }
         public string Email { get; set; }
         public StripeAccountType Type { get; set; }
         public StripeTosAcceptance TosAcceptance { get; set; }
         public StripeLegalEntity LegalEntity { get; set; }
+        [IgnoreDataMember]
+        public StripeCapability[] RequestedCapabilities { get; set; }
+
+        public string ToUrl(string absoluteUrl)
+        {
+            if (RequestedCapabilities?.Length > 0)
+            {
+                foreach (var capability in RequestedCapabilities)
+                {
+                    absoluteUrl = absoluteUrl.AddQueryParam($"capabilities[{capability}][requested]", true);
+                }
+            }
+            return absoluteUrl;
+        }
     }
 
     public class CreateStripeAccountResponse : StripeAccount

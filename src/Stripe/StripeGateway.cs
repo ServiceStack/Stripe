@@ -269,6 +269,7 @@ namespace ServiceStack.Stripe
         public string SubscriptionId { get; set; }
         public bool? InvoiceNow { get; set; }
         public bool? Prorate { get; set; }
+        public bool? CancelAtPeriodEnd { get; set; }
     }
 
     /* Customer Subscriptions (Old)

@@ -7,6 +7,9 @@ This project contains a .NET v4.5 and .NET Standard 2.0 Library containing a typ
 
 It's used by [servicestack.net](http://servicestack.net/) to process merchant payments and recurring subscriptions online.
 
+This library only maintains the core Stripe REST APIs for processing payments, subscriptions and managing Customer account & card information.
+We welcome PR's to add support for any missing APIs which typically only requires adding annotated C# POCO DTOs as seen below.
+
 ## Features
 
   - **Small**, typed, message-based API uses only clean DTO's and fits in a single [StripeGateway.cs](https://github.com/ServiceStack/Stripe/blob/master/src/Stripe/StripeGateway.cs)
@@ -21,8 +24,6 @@ It's used by [servicestack.net](http://servicestack.net/) to process merchant pa
 Install from NuGet with:
 
     PM> Install-Package ServiceStack.Stripe
-
-Includes Portable Version (.NET 4.5, iOS, Android + Windows Store) 
 
 ### ASP.NET Core on .NET Framework
 
@@ -369,7 +370,7 @@ var deletedRef = gateway.Delete(new DeleteStripeCard
 
 
 ```csharp
-var cards = gateway.Get(new GetStripeCards { CustomerId = customer.Id });
+var cards = gateway.Get(new GetStripeCustomerCards { CustomerId = customer.Id });
 ```
 
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ServiceStack.Stripe.Types;
 using ServiceStack.Text;
@@ -889,7 +890,7 @@ namespace ServiceStack.Stripe
             }
         }
 
-        protected virtual async Task<string> SendAsync(string relativeUrl, string method, string body, string idempotencyKey)
+        protected virtual async Task<string> SendAsync(string relativeUrl, string method, string body, string idempotencyKey, CancellationToken token=default)
         {
             try
             {
@@ -950,7 +951,7 @@ namespace ServiceStack.Stripe
             }
         }
 
-        public async Task<T> SendAsync<T>(IReturn<T> request, string method, bool sendRequestBody = true, string idempotencyKey = null)
+        public async Task<T> SendAsync<T>(IReturn<T> request, string method, bool sendRequestBody = true, string idempotencyKey = null, CancellationToken token=default)
         {
             string relativeUrl;
             string body;
@@ -961,7 +962,7 @@ namespace ServiceStack.Stripe
                 body = sendRequestBody ? QueryStringSerializer.SerializeToString(request) : null;
             }
 
-            var json = await SendAsync(relativeUrl, method, body, idempotencyKey);
+            var json = await SendAsync(relativeUrl, method, body, idempotencyKey, token);
 
             using (new ConfigScope())
             {
@@ -988,10 +989,10 @@ namespace ServiceStack.Stripe
             return Send(request, method, sendRequestBody: method == HttpMethods.Post || method == HttpMethods.Put);
         }
 
-        public Task<T> SendAsync<T>(IReturn<T> request)
+        public Task<T> SendAsync<T>(IReturn<T> request, CancellationToken token=default)
         {
             var method = GetMethod(request);
-            return SendAsync(request, method, sendRequestBody: method == HttpMethods.Post || method == HttpMethods.Put);
+            return SendAsync(request, method, sendRequestBody: method == HttpMethods.Post || method == HttpMethods.Put, token: token);
         }
 
         public T Get<T>(IReturn<T> request)
@@ -999,9 +1000,9 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Get, sendRequestBody: false);
         }
 
-        public Task<T> GetAsync<T>(IReturn<T> request)
+        public Task<T> GetAsync<T>(IReturn<T> request, CancellationToken token=default)
         {
-            return SendAsync(request, HttpMethods.Get, sendRequestBody: false);
+            return SendAsync(request, HttpMethods.Get, sendRequestBody: false, token: token);
         }
 
         public T Post<T>(IReturn<T> request)
@@ -1009,9 +1010,9 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Post);
         }
 
-        public Task<T> PostAsync<T>(IReturn<T> request)
+        public Task<T> PostAsync<T>(IReturn<T> request, CancellationToken token=default)
         {
-            return SendAsync(request, HttpMethods.Post);
+            return SendAsync(request, HttpMethods.Post, token: token);
         }
 
         public T Post<T>(IReturn<T> request, string idempotencyKey)
@@ -1019,9 +1020,9 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Post, true, idempotencyKey);
         }
 
-        public Task<T> PostAsync<T>(IReturn<T> request, string idempotencyKey)
+        public Task<T> PostAsync<T>(IReturn<T> request, string idempotencyKey, CancellationToken token=default)
         {
-            return SendAsync(request, HttpMethods.Post, true, idempotencyKey);
+            return SendAsync(request, HttpMethods.Post, true, idempotencyKey, token);
         }
 
         public T Put<T>(IReturn<T> request)
@@ -1029,9 +1030,9 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Put);
         }
 
-        public Task<T> PutAsync<T>(IReturn<T> request)
+        public Task<T> PutAsync<T>(IReturn<T> request, CancellationToken token=default)
         {
-            return SendAsync(request, HttpMethods.Put);
+            return SendAsync(request, HttpMethods.Put, token: token);
         }
 
         public T Delete<T>(IReturn<T> request)
@@ -1039,9 +1040,9 @@ namespace ServiceStack.Stripe
             return Send(request, HttpMethods.Delete, sendRequestBody: false);
         }
 
-        public Task<T> DeleteAsync<T>(IReturn<T> request)
+        public Task<T> DeleteAsync<T>(IReturn<T> request, CancellationToken token=default)
         {
-            return SendAsync(request, HttpMethods.Delete, sendRequestBody: false);
+            return SendAsync(request, HttpMethods.Delete, sendRequestBody: false, token: token);
         }
     }
 

@@ -19,6 +19,8 @@ We welcome PR's to add support for any missing APIs which typically only require
   - **Testable**, implements the mockable [IRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack.Interfaces/IRestGateway.cs), can [return test data](https://github.com/ServiceStack/ServiceStack/blob/master/tests/ServiceStack.Common.Tests/MockRestGatewayTests.cs) with a generic [MockRestGateway](https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack/Testing/MockRestGateway.cs)
   - See [Stripe.Tests](https://github.com/ServiceStack/Stripe/tree/master/tests/Stripe.Tests) for more example usages.
 
+Like [ServiceStack.Text](https://github.com/ServiceStack/ServiceStack.Text) the official releases of [ServiceStack.Stripe](https://www.nuget.org/packages/ServiceStack.Stripe) is a [free library for commercial or non-commercial usage](https://docs.servicestack.net/releases/v4.0.62#servicestacktext-is-now-free).
+
 ## Install ServiceStack.Stripe
 
 Install from NuGet with:

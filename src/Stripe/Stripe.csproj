@@ -3,9 +3,9 @@
   <PropertyGroup>
     <PackageId>ServiceStack.Stripe</PackageId>
     <AssemblyName>Stripe</AssemblyName>
-    <TargetFrameworks>net45;netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0;net6.0</TargetFrameworks>
     <Title>Typed message-based .NET Client Gateway for Stripe's REST API</Title>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <PackageDescription>
       A typed message-based .NET client gateway for accessing Stripe's REST API.
       Used by servicestack.net to process merchant payments and recurring subscriptions.
@@ -18,7 +18,7 @@
     <PackageReference Include="ServiceStack.Text" Version="$(Version)" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net" />
   </ItemGroup>
 

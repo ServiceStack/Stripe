@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
     <DebugType>portable</DebugType>
     <AssemblyName>Stripe.Tests</AssemblyName>
     <OutputType>Library</OutputType>
@@ -23,7 +23,7 @@
     <PackageReference Include="ServiceStack.Client" Version="$(Version)" />
     <PackageReference Include="ServiceStack.Text" Version="$(Version)" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">

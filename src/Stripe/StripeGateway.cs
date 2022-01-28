@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -815,6 +817,8 @@ namespace ServiceStack.Stripe
         private string stripeAccount;
         public ICredentials Credentials { get; set; }
         private string UserAgent { get; set; }
+        
+        public HttpClient Client { get; set; }
 
         public StripeGateway(string apiKey, string publishableKey = null, string stripeAccount = null)
         {
@@ -823,92 +827,97 @@ namespace ServiceStack.Stripe
             this.stripeAccount = stripeAccount;
             Credentials = new NetworkCredential(apiKey, "");
             Timeout = TimeSpan.FromSeconds(60);
-            UserAgent = "servicestack .net stripe v1";
+            UserAgent = "ServiceStack.Stripe";
             Currency = Currencies.UnitedStatesDollar;
+            Client = new HttpClient(new HttpClientHandler {
+                Credentials = Credentials,
+                PreAuthenticate = true,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+            }, disposeHandler:true);
             JsConfig.InitStatics();
-
-            //https://support.stripe.com/questions/how-do-i-upgrade-my-stripe-integration-from-tls-1-0-to-tls-1-2#dotnet
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
         }
 
-        protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)
+        private HttpRequestMessage PrepareRequest(string relativeUrl, string method, string requestBody, string idempotencyKey)
         {
-            req.Accept = MimeTypes.Json;
-            req.Credentials = Credentials;
+            var url = BaseUrl.CombineWith(relativeUrl);
 
-            if (method == HttpMethods.Post || method == HttpMethods.Put)
-                req.ContentType = MimeTypes.FormUrlEncoded;
+            var httpReq = new HttpRequestMessage(new HttpMethod(method), url);
+
+            httpReq.Headers.UserAgent.Add(new ProductInfoHeaderValue(UserAgent, Env.VersionString));
+            httpReq.Headers.Add(HttpHeaders.Accept, MimeTypes.Json);
 
             if (!string.IsNullOrWhiteSpace(idempotencyKey))
-                req.Headers["Idempotency-Key"] = idempotencyKey;
+                httpReq.Headers.Add("Idempotency-Key", idempotencyKey);
 
-            req.Headers["Stripe-Version"] = APIVersion;
+            httpReq.Headers.Add("Stripe-Version", APIVersion);
 
-            if(!string.IsNullOrWhiteSpace(stripeAccount))
+            if (requestBody != null)
             {
-                req.Headers["Stripe-Account"] = stripeAccount;
+                httpReq.Content = new StringContent(requestBody, Encoding.UTF8);
+                if (method is HttpMethods.Post or HttpMethods.Put)
+                    httpReq.Content!.Headers.ContentType = new MediaTypeHeaderValue(MimeTypes.FormUrlEncoded);
             }
 
-            PclExport.Instance.Config(req,
-                userAgent: UserAgent,
-                timeout: Timeout,
-                preAuthenticate: true);
+            return httpReq;
         }
 
-        protected virtual void HandleStripeException(WebException ex)
+        private Exception CreateException(HttpResponseMessage httpRes)
         {
-            string errorBody = ex.GetResponseBody();
-            var errorStatus = ex.GetStatus() ?? HttpStatusCode.BadRequest;
+#if NET6_0_OR_GREATER            
+            return new HttpRequestException(httpRes.ReasonPhrase, null, httpRes.StatusCode); 
+#else
+            return new HttpRequestException(httpRes.ReasonPhrase); 
+#endif
+        }
 
-            if (ex.IsAny400())
+        protected virtual string Send(string relativeUrl, string method, string requestBody, string idempotencyKey)
+        {
+            var httpReq = PrepareRequest(relativeUrl, method, requestBody, idempotencyKey);
+
+#if NET6_0_OR_GREATER            
+            var httpRes = Client.Send(httpReq);
+            var responseBody = httpRes.Content.ReadAsStream().ReadToEnd(Encoding.UTF8);
+#else
+            var httpRes = Client.SendAsync(httpReq).GetAwaiter().GetResult();
+            var responseBody = httpRes.Content.ReadAsStreamAsync().GetAwaiter().GetResult().ReadToEnd(Encoding.UTF8);
+#endif
+            
+            if (httpRes.IsSuccessStatusCode)
+                return responseBody;
+
+            if (httpRes.StatusCode is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError)
             {
-                var result = errorBody.FromJson<StripeErrors>();
+                var result = responseBody.FromJson<StripeErrors>();
                 throw new StripeException(result.Error)
                 {
-                    StatusCode = errorStatus
+                    StatusCode = httpRes.StatusCode
                 };
             }
+
+            httpRes.EnsureSuccessStatusCode();
+            throw CreateException(httpRes); // should never reach here 
         }
 
-        protected virtual string Send(string relativeUrl, string method, string body, string idempotencyKey)
+        protected virtual async Task<string> SendAsync(string relativeUrl, string method, string requestBody, string idempotencyKey, CancellationToken token=default)
         {
-            try
+            var httpReq = PrepareRequest(relativeUrl, method, requestBody, idempotencyKey);
+
+            var httpRes = await Client.SendAsync(httpReq, token).ConfigAwait();
+            var responseBody = await (await httpRes.Content.ReadAsStreamAsync()).ReadToEndAsync(Encoding.UTF8).ConfigAwait();
+            if (httpRes.IsSuccessStatusCode)
+                return responseBody;
+
+            if (httpRes.StatusCode is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError)
             {
-                var url = BaseUrl.CombineWith(relativeUrl);
-                var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req =>
+                var result = responseBody.FromJson<StripeErrors>();
+                throw new StripeException(result.Error)
                 {
-                    InitRequest(req, method, idempotencyKey);
-                });
-
-                return response;
+                    StatusCode = httpRes.StatusCode
+                };
             }
-            catch (WebException ex)
-            {
-                HandleStripeException(ex);
 
-                throw;
-            }
-        }
-
-        protected virtual async Task<string> SendAsync(string relativeUrl, string method, string body, string idempotencyKey, CancellationToken token=default)
-        {
-            try
-            {
-                var url = BaseUrl.CombineWith(relativeUrl);
-                var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req =>
-                {
-                    InitRequest(req, method, idempotencyKey);
-                });
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                if (ex.UnwrapIfSingleException() is WebException webEx)
-                    HandleStripeException(webEx);
-
-                throw;
-            }
+            httpRes.EnsureSuccessStatusCode();
+            throw CreateException(httpRes); // should never reach here 
         }
 
         public class ConfigScope : IDisposable
